@@ -162,6 +162,11 @@ p {
   color: #4d5861;
 }
 
+p2 {
+  font-size: 1rem;
+  color: #4d5861;
+}
+
 pre code {
   background-color: #eee;
   border: 1px solid #999;
@@ -274,7 +279,7 @@ pre {
   margin-top: 0;
   margin-bottom: 1rem;
   overflow: auto;
-  font-size: 0.875em;
+  font-size: 1em;
 }
 pre code {
   font-size: inherit;
