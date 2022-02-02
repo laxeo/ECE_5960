@@ -7720,7 +7720,12 @@ textarea.form-control-lg {
 .text-primary {
   --bs-text-opacity: 1;
   color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
-  font-size: 2rem;
+}
+
+.text-primary2 {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+  font-size: 2rem !important;
 }
 
 .text-secondary {
@@ -11301,19 +11306,7 @@ body {
     padding-left: 17rem;
   }
 }
-h1, .h1,
-h2,
-.h2,
-h3,
-.h3,
-h4,
-.h4,
-h5,
-.h5,
-h6,
-.h6 {
-  text-transform: none;
-}
+
 
 h1, .h1 {
   line-height: 1;
