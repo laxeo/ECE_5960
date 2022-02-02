@@ -45,38 +45,47 @@
             <!-- lab1-->
             <section class="resume-section" id="lab1">
                 <div class="resume-section-content">
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 1 - Artemis</h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 1 - The Artemis Board</h2>
                     <div class="flex-shrink-0"><span class="text-primary2" >Jan 27<sup>th</sup>, 2022</span></div>
                     </div>
+                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Blink it Up</h3>
+                        <div class="subheading mb-2">Make the LED blink</div>
+                        <p>In this part, I set the delay between turn the LED on and off to be 100ms. Thus the delay for a whole loop is 200ms, and the blink frequency is 5Hz.</p>
+                        <iframe width="640" height="360" src="https://www.youtube.com/embed/g0jb9n1CThM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Serial</h3>
+                        <div class="subheading mb-2">Read and Write</div>
+                        <p>In this part, the board is able to read the input I give to it and echo the same output to me through the serial port.</p>
+                        <iframe width="640" height="360" src="https://www.youtube.com/embed/LvM3wlLP2lc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
 
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Senior Web Developer</h3>
-                            <div class="subheading mb-3">Intelitec Solutions</div>
-                            <p>Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.</p>
-                        </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">AnalogRead</h3>
+                        <div class="subheading mb-2">Temp Sensor</div>
+                        <p>In this part, the board continuously outputs temperature detected by its temp sensor through the monitoring panel. And we can see the temperature went up when I was heating it using a hair dryer.</p>
+                        <iframe width="640" height="360" src="https://www.youtube.com/embed/K7g_Yew2VbA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Web Developer</h3>
-                            <div class="subheading mb-3">Intelitec Solutions</div>
-                            <p>Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.</p>
-                        </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">MicrophoneOutput</h3>
+                        <div class="subheading mb-2">PDM</div>
+                        <p>In this part, the microphone on the board recorded the voice it recieved, and returned the frequency of the loudest sound source using Fourier Transform. I also tested the frequency of my whistle which is approximately 1200~1700.</p>
+                        <iframe width="640" height="360" src="https://www.youtube.com/embed/k89ZKAVQGI0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Junior Web Designer</h3>
-                            <div class="subheading mb-3">Shout! Media Productions</div>
-                            <p>Podcasting operational change management inside of workflows to establish a framework. Taking seamless key performance indicators offline to maximise the long tail. Keeping your eye on the ball while performing a deep dive on the start-up mentality to derive convergence on cross-platform integration.</p>
-                        </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Whistle Detection</h3>
+                        <div class="subheading mb-2">Turn on the LED when you whistle, and off otherwise</div>
+                        <p>Using the data from the previous step, I know the frequency of my whistle is about 1200~1700. I first initialized digital pin LED_BUILTIN as an output by adding 'pinMode(LED_BUILTIN, OUTPUT);' to void setup( ).
+                        Then I added a judgment statement to make the LED turn on when it encounters a sound whose frequency is above 1200, and turn off otherwise.
+                        </p>
+                        <iframe width="640" height="360" src="https://www.youtube.com/embed/WzCsa4H3_xQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
-                    <div class="d-flex flex-column flex-md-row justify-content-between">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Web Design Intern</h3>
-                            <div class="subheading mb-3">Shout! Media Productions</div>
-                            <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
-                        </div>
-                    </div>
+                    
                 </div>
             </section>
             <hr class="m-0" />
