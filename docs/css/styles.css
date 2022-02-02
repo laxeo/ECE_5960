@@ -158,20 +158,13 @@ h6, .h6 {
 p {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #4d5861;
 }
 
 p2 {
   font-size: 1rem;
   color: #4d5861;
-}
-
-pre code {
-  background-color: #eee;
-  border: 1px solid #999;
-  display: block;
-  
 }
 
 abbr[title],
@@ -279,12 +272,15 @@ pre {
   margin-top: 0;
   margin-bottom: 1rem;
   overflow: auto;
-  font-size: 1em;
+  font-size: 1.1em;
 }
 pre code {
   font-size: inherit;
   color: inherit;
   word-break: normal;
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
 }
 
 code {
