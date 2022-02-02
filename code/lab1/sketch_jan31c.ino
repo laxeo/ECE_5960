@@ -30,6 +30,8 @@ AP3_PDM myPDM;   //Create instance of PDM class
 //Math library needed for FFT
 #include <arm_math.h>
 
+int stage = 0;
+
 void setup()
 {
   // initialize digital pin LED_BUILTIN as an output.
@@ -123,13 +125,19 @@ void printLoudest(void)
   {
     Serial.printf("Loudest frequency bin: %d\n", ui32MaxIndex);
   }
-  if(ui32LoudestFrequency>1200){
+  
+  //modified
+  if(ui32LoudestFrequency>1200 && stage==0){
     digitalWrite(LED_BUILTIN, HIGH);
+    stage = 1;
     }
-  else{
-    digitalWrite(LED_BUILTIN, LOW); 
+  else if(ui32LoudestFrequency<=1200 && stage==1){
+    digitalWrite(LED_BUILTIN, LOW);
+    stage = 0;
     }
+
   Serial.printf("Loudest frequency: %d         \n", ui32LoudestFrequency);
+
 }
 
 //*****************************************************************************
