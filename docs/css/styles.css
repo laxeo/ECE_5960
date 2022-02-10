@@ -159,7 +159,8 @@ p {
   margin-top: 0;
   margin-bottom: 1rem;
   font-size: 1.3rem;
-  color: #4d5861;
+  color: black;
+  /* color: #4d5861; */
 }
 
 p2 {
