@@ -98,6 +98,10 @@ hr {
   opacity: 0.25;
 }
 
+/* figcaption {
+  margin-right: 0px;
+} */
+
 hr:not([size]) {
   height: 1px;
 }
