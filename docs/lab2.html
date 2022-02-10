@@ -148,10 +148,18 @@
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Reliability</h3>
                         <div class="subheading mb-2">Verify whether there is missing data in higher data sending frequency</div>
-                        <p>In this task, I firstly tried to increase the changing frequency of 'RX_FLOAT' by modifying the interval to be smaller (from 500 to 0.01), and monitor the value received by the computer by setting up a
-                            notification handler using ble.start_notify. But I found there will be no data missing.</p>
-                        <div align="center"><img width="85%"  src="images/lab2/notifyfre.png" alt="notifyfre" title="notifyfre" /></div>
-                            <figcaption class="mb-1" align="middle"> Monitor the Change of 'RX_FLOAT' </figcaption>
+                        <p>In this task, I added a time.sleep(1) in the update function for ble.start_notify, which means the notify function can
+                            only receive one update in 1 second. But we know the value that is monitored by this notify funciotn added up to 0.5
+                            every 0.5 second, which means that the robot send data at a higher rate than the receiving rate of the computer.
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/jqk5AnDbOLw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>But in the video, we can see that there is no data missing in the notification handler. Even though I tried to start
+                            and end the notify function so quickly, the notification handler continued to receive data for a while.
+                            This may be because the data sent from the robot will be store in somewhere like a buffer (probably a queue) until the robot receive the command to
+                            stop notify. Then the data in the buffer will be printed by the update function until there is nothing in it.
+                            <br>
+                            But I don't know if there exists a limit size for the buffer which may cause a data missing.
+                        </p>
                         <p>Then I tried to make the Artemis Board run slower than the interval between two commands sent to it to see how it handles high frequency commands.</p>
                         <div align="center"><img width="85%"  src="images/lab2/reliability.png" alt="reliability" title="reliability" /></div>
                         <figcaption class="mb-1" align="middle"> Code for Reliability Test </figcaption>
@@ -166,9 +174,9 @@
                             when a command is sent and computer wanted to send another command, it needed to wait until the Artemis Board finished its task.
                             <BR>
                             This may be because there is a feedback signal to tell the computer whether the Artemis Board has completed the work in the bluetooth communication protocol, which
-                            prevent computer to send a new command to the Artemis Board until it received such feedback signal. And vice versa.
+                            prevent computer to send a new command to the Artemis Board until it received such feedback signal.
                             <br>
-                            So there will be no data missing between the bluetooth communication of computer and robot thanks to the protocol.
+                            So there will be no data missing between the bluetooth communication of computer and robot in this way.
                         </p>
                     </div>
 
