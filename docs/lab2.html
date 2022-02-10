@@ -55,7 +55,7 @@
                         <p>Following the instruction, I installed venv, completed Virtual Environment Configuration, and installed Python Packages for Jupyterlab. Then I installed ArduinoBLE from
                             the library manager in the Arduino IDE for the next bluetooth communication. Finally, I downloaded and unzip the codebase into the directory where Jupyterlab is installed and started
                             the Jupyter server after activating the virtual environment for it.</p>
-                        <img width="100%"  src="images/lab2/Jupyterlab.png" alt="Jupyterlab Screenshot" title="Jupyterlab Screenshot" />
+                        <img width="85%"  src="images/lab2/Jupyterlab.png" alt="Jupyterlab Screenshot" title="Jupyterlab Screenshot" />
                         <figcaption  align="middle"> Jupyterlab Screenshot </figcaption>
                     </div>
                     
@@ -63,14 +63,14 @@
                         <h3 class="mb-1">BLE Connection</h3>
                         <div class="subheading mb-2">Connect PC and Artemis Board via Bluetooth</div>
                         <p>First get the MAC of Artemis Board from Serial Monitor after uploading 'ble_arduino.ino' to the board</p>
-                        <img width="100%"  src="images/lab2/ble_arduino.png" alt="ble_arduino" title="ble_arduino" />
+                        <img width="85%"  src="images/lab2/ble_arduino.png" alt="ble_arduino" title="ble_arduino" />
                         <figcaption class="mb-1" align="middle"> ble_arduino </figcaption>
                         <p>Then modify the mac ID in 'connection.yaml' and connect PC and Artemis Board via code in Jupyterlab</p>
-                        <img width="100%"  src="images/lab2/connection_yaml.png" alt="connection_yaml" title="connection_yaml" />
+                        <img width="85%"  src="images/lab2/connection_yaml.png" alt="connection_yaml" title="connection_yaml" />
                         <figcaption align="middle"> connection.yaml </figcaption>
-                        <img width="100%"  src="images/lab2/getconnection.png" alt="getconnection" title="getconnection" />
+                        <img width="85%"  src="images/lab2/getconnection.png" alt="getconnection" title="getconnection" />
                         <figcaption align="middle"> Ble Connection </figcaption>
-                        <img width="100%"  src="images/lab2/connected.png" alt="connected" title="connected" />
+                        <img width="85%"  src="images/lab2/connected.png" alt="connected" title="connected" />
                         <figcaption align="middle"> Connected </figcaption>
                     </div>
 
@@ -78,10 +78,10 @@
                         <h3 class="mb-1">ECHO</h3>
                         <div class="subheading mb-2">Send an ECHO command to the Artemis board and receive an augmented string on the computer</div>
                         <p>First complete the code for case ECHO in 'ble_arduino.ino'</p>
-                        <img width="100%"  src="images/lab2/echocode.png" alt="echocode" title="echocode" />
+                        <img width="85%"  src="images/lab2/echocode.png" alt="echocode" title="echocode" />
                         <figcaption class="mb-1" align="middle"> Code for Case ECHO </figcaption>
                         <p>Then send an ECHO command with a string value ("HiHello") from the computer to the Artemis board, and receive an augmented string on the computer via Jupyterlab</p>
-                        <img width="100%"  src="images/lab2/ECHO.png" alt="ECHO" title="ECHO" />
+                        <img width="85%"  src="images/lab2/ECHO.png" alt="ECHO" title="ECHO" />
                         <figcaption align="middle"> ECHO </figcaption>
                     </div>
 
@@ -89,12 +89,12 @@
                         <h3 class="mb-1">Send Three Floats</h3>
                         <div class="subheading mb-2">Send three floats to the Artemis board</div>
                         <p>First complete the code for case SEND_THREE_FLOATS in 'ble_arduino.ino'</p>
-                        <img width="100%"  src="images/lab2/3fcode.png" alt="3fcode" title="3fcode" />
+                        <img width="85%"  src="images/lab2/3fcode.png" alt="3fcode" title="3fcode" />
                         <figcaption class="mb-1" align="middle"> Code for Case SEND_THREE_FLOATS </figcaption>
                         <p>Then send an SEND_THREE_FLOATS command with 3 floats from the computer to the Artemis board via Jupyterlab, and extract the three float values in the Arduino sketch</p>
-                        <img width="100%"  src="images/lab2/send3f.png" alt="send3f" title="send3f" />
+                        <img width="85%"  src="images/lab2/send3f.png" alt="send3f" title="send3f" />
                         <figcaption class="mb-1" align="middle"> ble.SEND_THREE_FLOATS </figcaption>
-                        <img width="100%"  src="images/lab2/extract3f.png" alt="extract3f" title="extract3f" />
+                        <img width="85%"  src="images/lab2/extract3f.png" alt="extract3f" title="extract3f" />
                         <figcaption align="middle"> Extract Three Floats </figcaption>
                     </div>
 
@@ -104,7 +104,7 @@
                         <p>First, define a function update for the ble.start_notify, making it print the float whenever it is updated.
                             Then, setup a notification handler in Python using ble.start_notify and set the ble.uuid to be 'RX_FLOAT' to receive the float value (the BLEFloatCharactersitic in Arduino) from the Artemis board.
                             In the callback function, store the float value into a (global) variable such that it is updated every time the characteristic value changes</p>
-                        <img width="100%"  src="images/lab2/notify.png" alt="Notify" title="Notify" />
+                        <img width="85%"  src="images/lab2/notify.png" alt="Notify" title="Notify" />
                         <figcaption align="middle"> Notify </figcaption>
                     </div>
 
@@ -123,9 +123,9 @@
                         <h3 class="mb-1">Effective Data Rate</h3>
                         <div class="subheading mb-2">Monitor the data size and communication time between computer and Artemis Board then calculate the data rate</div>
                         <p>In this task, I firstly setup a notification handler in Python using ble.start_notify and define a update function to calculate the communication time between the computer and Artemis Board and print it.</p>
-                        <img width="100%"  src="images/lab2/datarate.png" alt="datarate" title="datarate" />
+                        <img width="85%"  src="images/lab2/datarate.png" alt="datarate" title="datarate" />
                         <figcaption align="middle"> Code for Effective Data Rate </figcaption>
-                        <img width="100%"  src="images/lab2/cal1.png" alt="cal1" title="cal1" />
+                        <img width="85%"  src="images/lab2/cal1.png" alt="cal1" title="cal1" />
                         <figcaption class="mb-1" align="middle"> Code in ble_arduino.ino </figcaption>
                         <p>In the testing Python code, I set a default string 'aaaaa' and made a for loop to gradually increase the size of data sent to the Artemis Board using 'ble.send_command'.
                             In the for loop, the data size increase 5 bytes once. It will initialize T and store the time to t<sub>0</sub> once after a command is sent. For the notification handler, I defined a function 'update' which will store the time to t<sub>1</sub>
@@ -135,10 +135,10 @@
                             I also added a case 'CAL1' in ble_arduino.ino which only stores the string received from computer into c_str.
                         </p>
                         <p>Below is the dataset:</p>
-                        <img width="100%"  src="images/lab2/data.png" alt="data" title="data" />
+                        <img width="85%"  src="images/lab2/data.png" alt="data" title="data" />
                         <figcaption class="mb-1" align="middle"> Dataset </figcaption>
                         <p>Then draw the graph using the dataset:</p>
-                        <img width="100%"  src="images/lab2/graph.png" alt="graph" title="graph" />
+                        <img width="85%"  src="images/lab2/graph.png" alt="graph" title="graph" />
                         <figcaption class="mb-1" align="middle"> Graph </figcaption>
                         <p>From the graph, we can see the communication time increases linearly as the data size increases linearly. So the data rate is about 32.05 bytes/ms
                             (Except for basic communication time which is about 15.67ms)
@@ -150,12 +150,12 @@
                         <div class="subheading mb-2">Verify whether there is missing data in higher data sending frequency</div>
                         <p>In this task, I firstly tried to increase the changing frequency of 'RX_FLOAT' by modifying the interval to be smaller (from 500 to 0.01), and monitor the value received by the computer by setting up a
                             notification handler using ble.start_notify. But I found there will be no data missing.</p>
-                            <img width="100%"  src="images/lab2/notifyfre.png" alt="notifyfre" title="notifyfre" />
+                            <img width="85%"  src="images/lab2/notifyfre.png" alt="notifyfre" title="notifyfre" />
                             <figcaption class="mb-1" align="middle"> Monitor the Change of 'RX_FLOAT' </figcaption>
                         <p>Then I tried to make the Artemis Board run slower than the interval between two commands sent to it to see how it handles high frequency commands.</p>
-                        <img width="100%"  src="images/lab2/reliability.png" alt="reliability" title="reliability" />
+                        <img width="85%"  src="images/lab2/reliability.png" alt="reliability" title="reliability" />
                         <figcaption class="mb-1" align="middle"> Code for Reliability Test </figcaption>
-                        <img width="100%"  src="images/lab2/cal2.png" alt="cal2" title="cal2" />
+                        <img width="85%"  src="images/lab2/cal2.png" alt="cal2" title="cal2" />
                         <figcaption class="mb-1" align="middle"> Code in ble_arduino.ino </figcaption>
                         <p>In ble_arduino.ino, I added another case 'CAL2' which will repeat clear and store the string received from computer to c.str for 1000000 times which takes few seconds.
                             <br>
