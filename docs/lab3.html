@@ -191,12 +191,13 @@
                     <p>I first initialized the ToFs' xshuts to be 'LOW'. And then manually set their address via digitalWriting the xshuts to be "HIGH" one after another. And I found that only when one of them has been set to
                         a certain address, can I then digitalWrite the other's xshut to 'HIGH' and set the address for it. Otherwise one of them will not be detected, which means they may conflict in the same address.
                     </p>
-                    <div align="center"></div>
+                    <div align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/JNCaoR_aVbA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 
                     <p>
-                        Then I tested the function of IMU. Before using Example1_Basics to test the IMU, I set the "AD0_VAL" to be "0", which means that the value of the last bit of IMU's I2C address is "0". because
+                        Then I tested the function of IMU. Before using Example1_Basics to test the IMU, I set the "AD0_VAL" to be "0", which means that the value of the last bit of IMU's I2C address is "0". Because the initial address of the IMU is
+                        0x68, whose last bit in binary is "0".
                     </p>
-                    <div align="center"></div>
+                    <div align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/VmvBbJ3YtTg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                     <p>So far, I had confirmed that all the parts wired together were working well.</p>
 
                     </div>

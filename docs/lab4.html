@@ -44,140 +44,43 @@
         <div class="container-fluid p-0">
             <section class="resume-section" id="lab4">
                 <div class="resume-section-content">
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 4 - Bluetooth Communication</h2>
-                    <div class="flex-shrink-0"><span class="text-primary2" >Feb 3<sup>rd</sup>, 2022</span></div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 4 - Characterize Your Car</h2>
+                    <div class="flex-shrink-0"><span class="text-primary2" >Feb 17<sup>th</sup>, 2022</span></div>
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">Environment Configuration</h3>
-                        <div class="subheading mb-2">Virtual Environment Configuration, Python Packages Installation and Artemis Board Setup</div>
-                        <p>Following the instruction, I installed venv, completed Virtual Environment Configuration, and installed Python Packages for Jupyterlab. Then I installed ArduinoBLE from
-                            the library manager in the Arduino IDE for the next bluetooth communication. Finally, I downloaded and unzip the codebase into the directory where Jupyterlab is installed and started
-                            the Jupyter server after activating the virtual environment for it.</p>
-                        <div align="center"><img width="85%"  src="images/lab2/Jupyterlab.png" alt="Jupyterlab Screenshot" title="Jupyterlab Screenshot" /></div>
+                        <h3 class="mb-1">Dimensions of The Car</h3>
+                        <div class="subheading mb-2">Length, width and height of the car</div>
+                        <p></p>
+                        <div align="center"></div>
                         <figcaption align="middle"> Jupyterlab Screenshot </figcaption>
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">BLE Connection</h3>
-                        <div class="subheading mb-2">Connect PC and Artemis Board via Bluetooth</div>
-                        <p>First get the MAC of Artemis Board from Serial Monitor after uploading 'ble_arduino.ino' to the board</p>
-                        <div align="center"><img width="85%"  src="images/lab2/ble_arduino.png" alt="ble_arduino" title="ble_arduino" /></div>
-                        <figcaption class="mb-1" align="middle"> ble_arduino </figcaption>
-                        <p>Then modify the mac ID in 'connection.yaml' and connect PC and Artemis Board via code in Jupyterlab</p>
-                        <div align="center"><img width="85%"  src="images/lab2/connection_yaml.png" alt="connection_yaml" title="connection_yaml" /></div>
-                        <figcaption align="middle"> connection.yaml </figcaption>
-                        <div align="center"><img width="85%"  src="images/lab2/getconnection.png" alt="getconnection" title="getconnection" /></div>
-                        <figcaption align="middle"> Ble Connection </figcaption>
-                        <div align="center"><img  width="85%"  src="images/lab2/connected.png" alt="connected" title="connected" /></div>
+                        <h3 class="mb-1">Weight</h3>
+                        <div class="subheading mb-2">Weight of the car</div>
+                        <p></p>
+                        <div align="center"></div>
                         <figcaption align="middle"> Connected </figcaption>
                     </div>
 
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">ECHO</h3>
-                        <div class="subheading mb-2">Send an ECHO command to the Artemis board and receive an augmented string on the computer</div>
-                        <p>First complete the code for case ECHO in 'ble_arduino.ino'</p>
-                        <div align="center"><img width="85%"  src="images/lab2/echocode.png" alt="echocode" title="echocode" /></div>
-                        <figcaption class="mb-1" align="middle"> Code for Case ECHO </figcaption>
-                        <p>Then send an ECHO command with a string value ("HiHello") from the computer to the Artemis board, and receive an augmented string on the computer via Jupyterlab</p>
-                        <div align="center"><img width="85%"  src="images/lab2/ECHO.png" alt="ECHO" title="ECHO" /></div>
+                        <h3 class="mb-1">Charge Time</h3>
+                        <div class="subheading mb-2">Time that the car take to charge</div>
+                        <p></p>
+                        <div align="center"></div>
                         <figcaption align="middle"> ECHO </figcaption>
                     </div>
 
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">Send Three Floats</h3>
-                        <div class="subheading mb-2">Send three floats to the Artemis board</div>
-                        <p>First complete the code for case SEND_THREE_FLOATS in 'ble_arduino.ino'</p>
-                        <div align="center"><img width="85%"  src="images/lab2/3fcode.png" alt="3fcode" title="3fcode" /></div>
-                        <figcaption class="mb-1" align="middle"> Code for Case SEND_THREE_FLOATS </figcaption>
-                        <p>Then send an SEND_THREE_FLOATS command with 3 floats from the computer to the Artemis board via Jupyterlab, and extract the three float values in the Arduino sketch</p>
-                        <div align="center"><img width="85%"  src="images/lab2/send3f.png" alt="send3f" title="send3f" /></div>
-                        <figcaption class="mb-1" align="middle"> ble.SEND_THREE_FLOATS </figcaption>
-                        <div align="center"><img width="85%"  src="images/lab2/extract3f.png" alt="extract3f" title="extract3f" /></div>
+                        <h3 class="mb-1">Battery Life Time</h3>
+                        <div class="subheading mb-2">Battery life time of the car</div>
+                        <p></p>
+                        <div align="center"></div>
                         <figcaption align="middle"> Extract Three Floats </figcaption>
                     </div>
 
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Notify</h3>
-                        <div class="subheading mb-2">Setup a notification handler to receive the float value</div>
-                        <p>First, define a function update for the ble.start_notify, making it print the float whenever it is updated.
-                            Then, setup a notification handler in Python using ble.start_notify and set the ble.uuid to be 'RX_FLOAT' to receive the float value (the BLEFloatCharactersitic in Arduino) from the Artemis board.
-                            In the callback function, store the float value into a (global) variable such that it is updated every time the characteristic value changes</p>
-                        <div align="center"><img width="85%"  src="images/lab2/notify.png" alt="Notify" title="Notify" /></div>
-                        <figcaption align="middle"> Notify </figcaption>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Difference between Two Approaches</h3>
-                        <div class="subheading mb-0">1. Receive a float value in Python using receive_float( ) on a characteristic that is defined as BLEFloatCharactersitic in the Arduino side</div>
-                        <div class="subheading mb-2">2. Receive a float value in Python using receive_string( ) (and subsequently converting it to a float type in Python) on a characteristic that is defined as a BLECStringCharactersitic in the Arduino side</div>
-                        <p>The data size for a float is 4 bytes, and the data size for a string differs from the chars it contains. And for a basic foat 0.0, the size of the string representing 0.0 is also 4 bytes
-                            (including the pause at the end of the string). So its definitely better to use the first method whose data size is constantly 4 bytes which contains full information of a float. 
-                        </p>
-                    </div>
-
-                    <h3 align="center" class="mb-0">5960 Task</h3>
-
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Effective Data Rate</h3>
-                        <div class="subheading mb-2">Monitor the data size and communication time between computer and Artemis Board then calculate the data rate</div>
-                        <p>In this task, I firstly setup a notification handler in Python using ble.start_notify and define a update function to calculate the communication time between the computer and Artemis Board and print it.</p>
-                        <div align="center"><img width="85%"  src="images/lab2/datarate.png" alt="datarate" title="datarate" /></div>
-                        <figcaption align="middle"> Code for Effective Data Rate </figcaption>
-                        <div align="center"><img width="85%"  src="images/lab2/cal1.png" alt="cal1" title="cal1" /></div>
-                        <figcaption class="mb-1" align="middle"> Code in ble_arduino.ino </figcaption>
-                        <p>In the testing Python code, I set a default string 'aaaaa' and made a for loop to gradually increase the size of data sent to the Artemis Board using 'ble.send_command'.
-                            In the for loop, the data size increase 5 bytes once. It will initialize T and store the time to t<sub>0</sub> once after a command is sent. For the notification handler, I defined a function 'update' which will store the time to t<sub>1</sub>
-                            and add (t<sub>0</sub>-t<sub>1</sub></sub>) to T when it
-                            received the updated string. For each string sent to the Artemis Board, I also made a for loop to send for 1000 times and then get the average time (T/1000) of the communication between the computer and the Artemis Board.
-                            <br>
-                            I also added a case 'CAL1' in ble_arduino.ino which only stores the string received from computer into c_str.
-                        </p>
-                        <p>Below is the dataset:</p>
-                        <div align="center"><img width="85%"  src="images/lab2/data.png" alt="data" title="data" /></div>
-                        <figcaption class="mb-1" align="middle"> Dataset </figcaption>
-                        <p>Then draw the graph using the dataset:</p>
-                        <div align="center"><img width="85%"  src="images/lab2/graph.png" alt="graph" title="graph" /></div>
-                        <figcaption class="mb-1" align="middle"> Graph </figcaption>
-                        <p>From the graph, we can see the communication time increases linearly as the data size increases linearly. So the data rate is about 32.05 bytes/ms
-                            (Except for basic communication time which is about 15.67ms)
-                        </p>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Reliability</h3>
-                        <div class="subheading mb-2">Verify whether there is missing data in higher data sending frequency</div>
-                        <p>In this task, I added a time.sleep(1) in the update function for ble.start_notify, which means the notify function can
-                            only receive one update in 1 second. But we know the value that is monitored by this notify funciotn added up to 0.5
-                            every 0.5 second, which means that the robot send data at a higher rate than the receiving rate of the computer.
-                        </p>
-                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/jqk5AnDbOLw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                        <p>But in the video, we can see that there is no data missing in the notification handler. Even though I tried to start
-                            and end the notify function so quickly, the notification handler continued to receive data for a while.
-                            This may be because the data sent from the robot will be store in somewhere like a buffer (probably a queue) until the robot receive the command to
-                            stop notify. Then the data in the buffer will be printed by the update function until there is nothing in it.
-                            <br>
-                            But I don't know if there exists a limit size for the buffer which may cause a data missing.
-                        </p>
-                        <p>Then I tried to make the Artemis Board run slower than the interval between two commands sent to it to see how it handles high frequency commands.</p>
-                        <div align="center"><img width="85%"  src="images/lab2/reliability.png" alt="reliability" title="reliability" /></div>
-                        <figcaption class="mb-1" align="middle"> Code for Reliability Test </figcaption>
-                        <div align="center"><img width="85%"  src="images/lab2/cal2.png" alt="cal2" title="cal2" /></div>
-                        <figcaption class="mb-1" align="middle"> Code in ble_arduino.ino </figcaption>
-                        <p>In ble_arduino.ino, I added another case 'CAL2' which will repeat clear and store the string received from computer to c.str for 1000000 times which takes few seconds.
-                            <br>
-                            In the testing Python code, I set notifications before and after sending a command to the Artemis Board to see if a command is successfully sent to it. Then I
-                            setup a notification handler using ble.start_notify to see if the setup a Artemis Board finishes its task.
-                            <br>
-                            From the result we can know that
-                            when a command is sent and computer wanted to send another command, it needed to wait until the Artemis Board finished its task.
-                            <BR>
-                            This may be because there is a feedback signal to tell the computer whether the Artemis Board has completed the work in the bluetooth communication protocol, which
-                            prevent computer to send a new command to the Artemis Board until it received such feedback signal.
-                            <br>
-                            So there will be no data missing between the bluetooth communication of computer and robot in this way.
-                        </p>
-                    </div>
+                   
 
 
                     
