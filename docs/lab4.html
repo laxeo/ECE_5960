@@ -51,36 +51,75 @@
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Dimensions of The Car</h3>
                         <div class="subheading mb-2">Length, width and height of the car</div>
-                        <p></p>
-                        <div align="center"></div>
-                        <figcaption align="middle"> Jupyterlab Screenshot </figcaption>
+                        <p>Length: 7.15"
+                            <br>
+                            Width: 5.75"
+                            <br>
+                            Height: 3.15"
+                            <br>
+                            Wheel Diameter: 3.2"
+                        </p>
                     </div>
                     
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Weight</h3>
                         <div class="subheading mb-2">Weight of the car</div>
-                        <p></p>
-                        <div align="center"></div>
-                        <figcaption align="middle"> Connected </figcaption>
+                        <p>503g</p>
                     </div>
 
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Charge Time</h3>
-                        <div class="subheading mb-2">Time that the car take to charge</div>
-                        <p></p>
-                        <div align="center"></div>
-                        <figcaption align="middle"> ECHO </figcaption>
+                        <div class="subheading mb-2">Tifme that the car take to charge</div>
+                        <p>About 2h 30min</p>
                     </div>
 
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Battery Life Time</h3>
                         <div class="subheading mb-2">Battery life time of the car</div>
-                        <p></p>
-                        <div align="center"></div>
-                        <figcaption align="middle"> Extract Three Floats </figcaption>
+                        <p>About 300 cycles</p>
                     </div>
 
-                   
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Range of speed</h3>
+                        <div class="subheading mb-2">Typically for the maximum speed</div>
+                        <p>Together with Vincent Lu and Yingjie Zhao, I hook a ToF on the front of the car and drive it to maximum speed while recording the data.
+                            Then I use part of the data with a smooth drop in the middle to calculate its speed.
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/car.jpg" alt="car" title="car" /></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/Z4Yx5I0mu_w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/rawdata.png" alt="rawdata" title="rawdata" /></div>
+                        <p>
+                            From the data, we can see a trend:
+                            <br>
+                            1. At the very first, the distance is too long that exceeds the range of the ToF
+                            <br>
+                            2. Then the car goes into the range and continues its uniform motion and the distance decrease linearly
+                            <br>
+                            3. The car brakes which leads a reverse of the car, making the distance rapidly goes to 0 and then goes to large (The facade of the sensors
+                            faces to the ground and then faces to the roof)
+                        </p>
+                        <p>
+                            So I only take the linear part of the line to calculate the velocity of the car:
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/validdata.png" alt="validdata" title="validdata" /></div>
+                        <p>In the graph above we can see that the velocity of the car is about 3.1246 m/s</p>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Stunts</h3>
+                        <div class="subheading mb-2">The stunts that the car can do</div>
+                        <p>Push right/left until the car spin fast and then suddenly push up/down to make the car dance</p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/yeBUlb64Bms" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Truning Reliably</h3>
+                        <div class="subheading mb-2">How reliably does the robot turn around its own axis</div>
+                        <p>It is quite reliable.</p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/R7jUZ9oTQk8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    </div>
+
+        
 
 
                     
