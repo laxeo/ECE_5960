@@ -191,26 +191,53 @@
                     <p>I first initialized the ToFs' xshuts to be 'LOW'. And then manually set their address via digitalWriting the xshuts to be "HIGH" one after another. And I found that only when one of them has been set to
                         a certain address, can I then digitalWrite the other's xshut to 'HIGH' and set the address for it. Otherwise one of them will not be detected, which means they may conflict in the same address.
                     </p>
-                    <div align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/JNCaoR_aVbA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/JNCaoR_aVbA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 
                     <p>
                         Then I tested the function of IMU. Before using Example1_Basics to test the IMU, I set the "AD0_VAL" to be "0", which means that the value of the last bit of IMU's I2C address is "0". Because the initial address of the IMU is
                         0x68, whose last bit in binary is "0".
                     </p>
-                    <div align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/VmvBbJ3YtTg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/VmvBbJ3YtTg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                     <p>So far, I had confirmed that all the parts wired together were working well.</p>
 
                     </div>
 
                     <div class="flex-grow-1">
                         <h3 class="mb-1">ToF</h3>
-                        <div class="subheading mb-2">Send an ECHO command to the Artemis board and receive an augmented string on the computer</div>
-                        <p>First complete the code for case ECHO in 'ble_arduino.ino'</p>
-                        <div align="center"><img width="85%"  src="images/lab2/echocode.png" alt="echocode" title="echocode" /></div>
-                        <figcaption class="mb-1" align="middle"> Code for Case ECHO </figcaption>
-                        <p>Then send an ECHO command with a string value ("HiHello") from the computer to the Artemis board, and receive an augmented string on the computer via Jupyterlab</p>
-                        <div align="center"></div>
-                        <figcaption align="middle"> ECHO </figcaption>
+                        <div class="subheading mb-2">Test the ToF to see its linearity in different modes</div>
+                        <p>Before starting the test, I set one of the ToFs to be short-distance-mode while the other is long-distance-mode. (The mideium-distance-mode
+                            can not be recognized by the App)</p>
+                        <pre><code>
+    if (distanceSensor0.begin() != 0) //Begin returns 0 on a good init
+    {
+        Serial.println("Sensor0 failed to begin. Please check wiring. Freezing...");
+    }
+    else{
+        distanceSensor0.setI2CAddress(0x29);
+        <span style="color:red;">distanceSensor0.setDistanceModeShort();</span>
+    }
+    //Serial.printf("port: 0x%08X\n", (uint32_t)distanceSensor0.getI2CAddress());
+    Serial.println("Sensor0 online!");
+
+
+    delay(50);
+    digitalWrite(SHUTDOWN_PIN1, HIGH);
+    delay(50);
+    if (distanceSensor1.begin() != 0) //Begin returns 0 on a good init
+    {
+        Serial.println("Sensor1 failed to begin. Please check wiring. Freezing...");
+    }
+    else{
+        distanceSensor1.setI2CAddress(0x30);
+        <span style="color:red;">distanceSensor1.setDistanceModeLong();</span>
+    }
+                            </code></pre>
+                        <p>Together with Yingjie Zhao, I lay the equipments for measuring tof accuracy on the ToF.</p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/_vAxB3Yz6x4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                        Then we record the data every 20cm from the ToFs to see their linearity:
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/1gqWYJFBd40" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                     </div>
 
                     <h3 class="mb-0">IMU</h3>
@@ -218,38 +245,89 @@
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Accelerometer</h3>
                         <div class="subheading mb-2">Convert accelerometer data into pitch and roll</div>
-                        <p>First complete the code for case SEND_THREE_FLOATS in 'ble_arduino.ino'</p>
+                        <p>Having set up the IMU and activated the accelerometer, the IMU is able to obtain data in three directions of x,y, and z.
+                            Then I add codes showed below to convert accelerometer data into pitch and roll:
+                        </p>
+                        <pre><code>
+    float roll = 180 * atan2(sensor->accY(),sensor->accZ())/M_PI;
+    float pitch = 180 * atan2(sensor->accX(),sensor->accZ())/M_PI;
+    SERIAL_PORT.print("roll: ");
+    printFormattedFloat(roll, 3, 2);
+    SERIAL_PORT.print(", ");
+    SERIAL_PORT.print("pitch: ");
+    printFormattedFloat(pitch, 3, 2);
+                        </code></pre>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/JMeSzlH09z4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                            Then I recorded the output at {-90, 0, 90} degrees pitch and roll using the app called "spirit level" in iphone as a benchmark.
+                            I found the horizontal (0°) measurement is accurate. But the output at 90° or -90° are 88° and -88°, which needs a two point calibration.
+                            And the conversion factor is (180 / 176 = 1.0227).
+                        </p>
                         <div class="subheading mb-2">Test frequency response</div>
-                        <div align="center"><img width="85%"  src="images/lab2/3fcode.png" alt="3fcode" title="3fcode" /></div>
-                        <figcaption class="mb-1" align="middle"> Code for Case SEND_THREE_FLOATS </figcaption>
-                        <p>Then send an SEND_THREE_FLOATS command with 3 floats from the computer to the Artemis board via Jupyterlab, and extract the three float values in the Arduino sketch</p>
-                        <div align="center"><img width="85%"  src="images/lab2/send3f.png" alt="send3f" title="send3f" /></div>
-                        <figcaption class="mb-1" align="middle"> ble.SEND_THREE_FLOATS </figcaption>
-                        <div align="center"><img width="85%"  src="images/lab2/extract3f.png" alt="extract3f" title="extract3f" /></div>
+                        <div align="center"></div>
+                        <p></p>
+                        <div align="center"></div>
                         <figcaption align="middle"> Extract Three Floats </figcaption>
                     </div>
 
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Gyroscope</h3>
                         <div class="subheading mb-2">Compute pitch, roll, and yaw angles from the gyroscope</div>
-                        <p>First, define a function update for the ble.start_notify, making it print the float whenever it is updated.
-                            Then, setup a notification handler in Python using ble.start_notify and set the ble.uuid to be 'RX_FLOAT' to receive the float value (the BLEFloatCharactersitic in Arduino) from the Artemis board.
-                            In the callback function, store the float value into a (global) variable such that it is updated every time the characteristic value changes</p>
-
-                        <div class="subheading mb-2">Test accuracy and stablility</div>
-                        <div align="center"><img width="85%"  src="images/lab2/notify.png" alt="Notify" title="Notify" /></div>
-                        <figcaption align="middle"> Notify </figcaption>
+                        <p>I use the equations from slides to calculate pitch, roll, and yaw angles using data from the gyroscope. I set the
+                            default value of roll_g and pitch_g to be the first data calculated from accelerometer because the gyroscope doesn't 
+                            have a default value.
+                        </p>
+                        <pre><code>
+        dt = millis() - last;
+        last += dt;
+        roll_g +=  sensor->gyrX() * dt / 1000;
+        pitch_g -= sensor->gyrY() * dt / 1000;
+        yaw_g -= sensor->gyrZ() * dt / 1000;
+        
+        SERIAL_PORT.print("||");
+        SERIAL_PORT.print("roll_g: ");
+        printFormattedFloat(roll_g, 3, 2);
+        SERIAL_PORT.print(", ");
+        SERIAL_PORT.print("pitch_g: ");
+        printFormattedFloat(pitch_g, 3, 2);
+        SERIAL_PORT.print(", ");
+        SERIAL_PORT.print("yaw_g: ");
+        printFormattedFloat(yaw_g, 3, 2);
+                        </code></pre>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/_v54MN5ZqWE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>Through the observation and analysis of the data, I found that the gyroscope is unstable even if I put it on a stable table. 
+                           The value of roll and pitch increase continuously at standstill, and the zero points are very sensitive to rapid vibrations.
+                            When the IMU is stable, its accuracy is far less than accelerometer.
+                        </p>
+                        <p>
+                            Then I use a complimentary filter (alpha = 0.5) to compute an estimate of pitch and roll which is not susceptible to drift or quick vibrations: (The black line is the complimentary one)
+                        </p>
+                        <pre><code>
+    float roll_c = roll * alpha + roll_g * (1-alpha);
+    float pitch_c = pitch * alpha + pitch_g * (1-alpha);
+                        </code></pre>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/tzO60L7gSmg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                     </div>
-
-                    <h3 align="center" class="mb-0">5960 Task</h3>
 
                     <div class="flex-grow-1">
                         <h3 class="mb-1">Magnetometer</h3>
-                        <div class="subheading mb-0">Convert magnetometer data into a yaw angle</div>
+                        <div class="subheading mb-2">Convert magnetometer data into a yaw angle</div>
+                        <p>I use the code below to calculate yaw angle using data from magnetometer and accelerometer.</p>
+                        <pre><code>
+    float xm = sensor->magX()*cos(pitch) - sensor->magY()*sin(roll)*sin(pitch)
+               + sensor->magZ()*cos(roll)*sin(pitch);
+    float ym = sensor->magX()*cos(roll) + sensor->magZ()*sin(roll/180*M_PI);
+    float yaw = 180 * atan2(ym, xm)/M_PI;
+                        </code></pre>
+                        <div align="center"></div>
+                        <div align="center"></div>
                         <div class="subheading mb-2">Find the magnetic north</div>
+                        <p>Since the zero point of magnetometer is not exactly 0, I first place IMU horizontally, 
+                            and then rotate it 360 degrees along the z-axis to observe the value changes of magX. 
+                            When the value goes to minimum point, the orientation where the x-axis points to is the magnetic north (which is also the soulth pole).</p>
+                        <div align="center"></div>
                         <div class="subheading mb-2">Robust to small changes in pitch</div>
-                        <p>The data size for a float is 4 bytes, and the data size for a string differs from the chars it contains. And for a basic foat 0.0, the size of the string representing 0.0 is also 4 bytes
-                            (including the pause at the end of the string). So its definitely better to use the first method whose data size is constantly 4 bytes which contains full information of a float. 
+                        <p>From the video above, I found that the yaw angle fluctuates widely and rapidly, which is not robust at all.
                         </p>
                     </div>
 
