@@ -238,6 +238,31 @@
                         Then we record the data every 20cm from the ToFs to see their linearity:
                         </p>
                         <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/1gqWYJFBd40" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div align="center"><img width="85%"  src="images/lab3/rawdata.png" alt="rawdata" title="rawdata" /></div>
+                        <div align="center"><img width="85%"  src="images/lab3/shotmode.png" alt="shotmode" title="shotmode" /></div>
+                        <div align="center"><img width="85%"  src="images/lab3/longmode.png" alt="/longmode" title="/longmode" /></div>
+                        <p>
+                            From the data, we can see that the short distance mode is more accurate because the wavelength of infrared emitted in this mode is shorter and it takes less time to process the data.
+                            But at the same time, its range is shorter, who loses its reliability at about 2.2m. On the other hand, the long distance mode has a larger range but worse error.
+                            In the data, we can see that the conversion factors for these two modes are 1/0.9883 and 1/0.9154. 
+                            <br>
+                            However, even in long distance mode, we cannot measure its theoretical maximum range (4m). The maximum measurable value is about 3.2m.
+                        </p>
+                        <div class="subheading mb-2">5960 Tasks</div>
+                        <p>There are only several legal values for Timing Budget: 20, 33, 50, 100. As I am building a fast robots, I should make the Timing Budget be as fast as possible. So I choose 20ms to be the Timing Budget and then I tested sevearl different
+                        values of Intermeasurement Period from 20ms to 100ms. (If I set the Timing Budget to be higher, there will be more signal fails)
+                        <br>
+                        After many attempts, I discovered a law how the Artemis Board run in the loop:</p>
+                           <div align="center"><p><span style="color:red;">Actual operating cycle = Intermeasurement Period - 10</span></p></div>
+                        <p>
+                            Which means if I set the Intermeasurement Period to be 50ms, the time for one loop is 40ms and the frequency is 25Hz, which is very interesting!
+                            And as the frequency goes larger, the probability of running failure is also getting lower and lower (When the History_Size is set).
+                            <br>
+                            When I set the Intermeasurement Period to be 30ms (The frequency is 50hz), the sensor can always run in good condition even I change the distance from the sensor to an object rapidly.
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/pgt_eFa6Hls" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/Az198u0s7tA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>In the future, I will tested the car in different frequency to find a mode that minimize the occurence of any kind of fails.</p>
                     </div>
 
                     <h3 class="mb-0">IMU</h3>
@@ -264,10 +289,12 @@
                             And the conversion factor is (180 / 176 = 1.0227).
                         </p>
                         <div class="subheading mb-2">Test frequency response</div>
-                        <div align="center"></div>
-                        <p></p>
-                        <div align="center"></div>
-                        <figcaption align="middle"> Extract Three Floats </figcaption>
+                        <p>In this part, I slowly roll the IMU while tapping it continuously and record the data of angle of roll. Then I put the data into MATLAB
+                            and calculate the frequency spectrum using Fourier Transform. I found that the frequency of my rolling is 0.05482Hz and others are all
+                            "unwanted noises". So I implemented complimentary low pass filter cut off frequency at 0.07Hz.
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab3/lpf.png" alt="lpf" title="lpf" /></div>
+                        <p>Having filted the "unwanted noises", the plot becomes a lot smoother, which can better show the correct trends of roll.</p>
                     </div>
 
                     <div class="flex-grow-1">
