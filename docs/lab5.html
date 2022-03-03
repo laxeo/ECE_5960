@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>ECE 5960 LAB 5</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version1)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Tongqing Zhang</span>
+                
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">MainPage</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab1.html">LAB 1</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab2.html">LAB 2</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab3.html">LAB 3</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab4.html">LAB 4</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#lab5">LAB 5</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab6.html">LAB 6</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab7.html">LAB 7</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab8.html">LAB 8</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab9.html">LAB 9</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab10.html">LAB 10</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab11.html">LAB 11</a></li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Page Content-->
+        <div class="container-fluid p-0">
+            <section class="resume-section" id="lab5">
+                <div class="resume-section-content">
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 5 - Open Loop Control</h2>
+                    <div class="flex-shrink-0"><span class="text-primary2" >Feb 24<sup>th</sup>, 2022</span></div>
+                    </div>
+                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Dimensions of The Car</h3>
+                        <div class="subheading mb-2">Length, width and height of the car</div>
+                        <p>Length: 7.15"
+                            <br>
+                            Width: 5.75"
+                            <br>
+                            Height: 3.15"
+                            <br>
+                            Wheel Diameter: 3.2"
+                        </p>
+                    </div>
+                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Weight</h3>
+                        <div class="subheading mb-2">Weight of the car</div>
+                        <p>503g</p>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Charge Time</h3>
+                        <div class="subheading mb-2">Tifme that the car take to charge</div>
+                        <p>About 2h 30min</p>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Battery Life Time</h3>
+                        <div class="subheading mb-2">Battery life time of the car</div>
+                        <p>About 300 cycles</p>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Range of speed</h3>
+                        <div class="subheading mb-2">Typically for the maximum speed</div>
+                        <p>Together with Vincent Lu and Yingjie Zhao, I hook a ToF on the front of the car and drive it to maximum speed while recording the data.
+                            Then I use part of the data with a smooth drop in the middle to calculate its speed.
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/car.jpg" alt="car" title="car" /></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/Z4Yx5I0mu_w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/rawdata.png" alt="rawdata" title="rawdata" /></div>
+                        <p>
+                            From the data, we can see a trend:
+                            <br>
+                            1. At the very first, the distance is too long that exceeds the range of the ToF
+                            <br>
+                            2. Then the car goes into the range and continues its uniform motion and the distance decrease linearly
+                            <br>
+                            3. The car brakes which leads a reverse of the car, making the distance rapidly goes to 0 and then goes to large (The facade of the sensors
+                            faces to the ground and then faces to the roof)
+                        </p>
+                        <p>
+                            So I only take the linear part of the line to calculate the velocity of the car:
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/validdata.png" alt="validdata" title="validdata" /></div>
+                        <p>In the graph above we can see that the velocity of the car is about 3.1246 m/s</p>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Braking Distance</h3>
+                        <div class="subheading mb-2">The braking distance of the car at full speed</div>
+                        <p>From the video above, we can see that the car will do a flip when braking at full speed, which means the braking distance is the
+                            same as it length: 7.15"
+                        </p>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Stunts</h3>
+                        <div class="subheading mb-2">The stunts that the car can do</div>
+                        <p>Push right/left until the car spin fast and then suddenly push up/down to make the car dance</p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/yeBUlb64Bms" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Truning Reliably</h3>
+                        <div class="subheading mb-2">How reliably does the robot turn around its own axis</div>
+                        <p>It is quite reliable.</p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/R7jUZ9oTQk8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    </div>
+
+        
+
+
+                    
+            </section>
+            <hr class="m-0" />
+           
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
