@@ -49,83 +49,164 @@
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">Dimensions of The Car</h3>
-                        <div class="subheading mb-2">Length, width and height of the car</div>
-                        <p>Length: 7.15"
+                        <h3 class="mb-1">Wiring</h3>
+                        <div class="subheading mb-2">Connection Diagram</div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab5/IMG_0120.jpg" alt="dia" title="dia" /></div>
+                        <p>
+                            First, I solder AIN1 to BIN1, AIN2 to BIN2, AOUT1 to BOUT1, AOUT2 to BOUT2 for both motor drivers using wires.
                             <br>
-                            Width: 5.75"
+                            Second, I solder AOUT1 and AOUT2 of one motor driver to one dc motor and the same for the other.
                             <br>
-                            Height: 3.15"
+                            Third, I solder pins on AIN1 and AIN2 for both motor drivers so that they can connect to pins on Artemis Board using wires.
                             <br>
-                            Wheel Diameter: 3.2"
+                            Fourth, I solder the VIN and GND pins of the two motor drivers together so that I can use only one wire to power them together.
+                            <br>
+                            Finally, I will choose pin A0, A1, A2, A3 on Artemis Board to control the two motor drivers because these pins can generate
+                            analog signals which are what we need.
                         </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab5/motors.jpg" alt="motors" title="motors" /></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/pykpl3wh1b0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">Weight</h3>
-                        <div class="subheading mb-2">Weight of the car</div>
-                        <p>503g</p>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Charge Time</h3>
-                        <div class="subheading mb-2">Tifme that the car take to charge</div>
-                        <p>About 2h 30min</p>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Battery Life Time</h3>
-                        <div class="subheading mb-2">Battery life time of the car</div>
-                        <p>About 300 cycles</p>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Range of speed</h3>
-                        <div class="subheading mb-2">Typically for the maximum speed</div>
-                        <p>Together with Vincent Lu and Yingjie Zhao, I hook a ToF on the front of the car and drive it to maximum speed while recording the data.
-                            Then I use part of the data with a smooth drop in the middle to calculate its speed.
-                        </p>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/car.jpg" alt="car" title="car" /></div>
-                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/Z4Yx5I0mu_w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/rawdata.png" alt="rawdata" title="rawdata" /></div>
+                        <h3 class="mb-1">Performance Testing</h3>
+                        <div class="subheading mb-2">Single motor driver</div>
                         <p>
-                            From the data, we can see a trend:
+                            First, I connect AIN1 and AIN2 of one motor driver to pin A0 and A1 of Artemis Board which is powered by a 850mAh battery,
+                            and use the code below to control the motor driver. I set the duty cycle to be 255 which means the duty cycle is 100%, to find the working voltage range of the motor driver.
                             <br>
-                            1. At the very first, the distance is too long that exceeds the range of the ToF
+                            Second, I connect the VIN and GND to a power supply.
                             <br>
-                            2. Then the car goes into the range and continues its uniform motion and the distance decrease linearly
-                            <br>
-                            3. The car brakes which leads a reverse of the car, making the distance rapidly goes to 0 and then goes to large (The facade of the sensors
-                            faces to the ground and then faces to the roof)
+                            Finally, I adjust the voltage of the power supply from 0 to 5V to see the working current of the motor driver.
                         </p>
+<pre><code>       void setup() {
+            //activate the pins
+            pinMode(A0, OUTPUT);
+            pinMode(A1, OUTPUT);
+            }
+            
+            void loop() {
+            //send signals to motor drivers
+            analogWrite(A0, 255);
+            analogWrite(A1, 0);
+            }</code></pre>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/xhdlNF-hlJQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         <p>
-                            So I only take the linear part of the line to calculate the velocity of the car:
+                            I adjust the votage from 0V to 5V and I find that we need a lower limit of about 2.55V to generate current for motor driver and
+                            about 2.7V to make the wheels spin, which coincides with the lowest operating voltage recorded in the documentation. And the minimum working current to make the wheel turn is about 0.35A. 
+                            Then as I increase the voltage, the current also slowly rises, ranging from 0.35A to 0.5A. Under the rated working voltage of 3.7V, the rated working current is about 0.4A.
                         </p>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab4/validdata.png" alt="validdata" title="validdata" /></div>
-                        <p>In the graph above we can see that the velocity of the car is about 3.1246 m/s</p>
-                    </div>
 
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Braking Distance</h3>
-                        <div class="subheading mb-2">The braking distance of the car at full speed</div>
-                        <p>From the video above, we can see that the car will do a flip when braking at full speed, which means the braking distance is the
-                            same as it length: 7.15"
+                        <div class="subheading mb-2">Analog PWM control</div>
+                        <p>
+                            From the documentation, the duty cycle should be set ranging from 0 to 255 which means 0~100% of a cycle.
+                            Firstly, I set the duty cycle to be 255 which means 100% of a cycle. And from the video below we can know that the Artemis Board is generating
+                            a constant high level signal to the motor driver and the frequency is 0Hz.
                         </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/i2QaBWXoGZA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                            Then I tired some other values of duty cycle and use a multimeter to measure rms. From the video below we can know that the analog signals generated by 
+                            the Artemis Board have a frequency of about 182Hz and the rms match the calculation of the duty cycle.
+                            <br>
+                            Duty cycle: 30 ; Val: 11.72% ~ 30/255;
+                            <br>
+                            Duty cycle: 100 ; Val: 39.09% ~ 100/255;
+                            <br>
+                            So from the data above we know how the motor drivers work:
+                            <br>
+                            Since we are using dc motors, it can only receive two commands: turn and not turn, but cannot control the speed and its voltage.
+                            <br>
+                            So we need to generate a analog signal to the motor driver to control the spinning speed. We can set a duty cycle 'dc' which corresponds to a percentage.
+                            This means that in one cycle, the proportion of high level signal is 'dc', which also means the wheel spinning time is 'dc' in one cycle. 
+                            So when the frequency of the signal is high enough and the period is short enough, we can control the speed of motors very smoothly.
+
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/iM3bkZ-rjdc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+
+                        <div class="subheading mb-2">Spin directions</div>
+                        <p>
+                            I change the direction of rotation of the motor by reversing the signal sent to the motor driver. Below are demo videos for the two motor drivers and motors.
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/tk-wgxq36Sk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/MfNIsVlmfbA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+
+                        <div class="subheading mb-2">Lower limit to start on the ground</div>
+                        <p>
+                            I first put the car on a table and only activate one motor dirver once to measure the lower limit of duty cycle to make the car start.
+                            <br>
+                            From the demo videos for the two motor drivers, I find that the lower limit of duty cycle to make the car start is about 95 for one and 65 for the other,
+                            which means that the two motors differ in their output power. However, this lower limit is also related to the battery voltage and power.
+                            The more powerful the battery, the lower the lower limit.
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/on5sMTA93Ys" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/_FNGMgDT3aU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+
+                        <div class="subheading mb-2">Go straight line</div>
+                        <p>
+                            From the test above we can know that the output power of the two motors is different under the same signal. But when the two motor drivers are connected together with the battery at the same time, their gap on output power is not as large as the previous experiment.
+                            I do find the motor on the left is a little bit stronger than the one on the right. When I set the duty cycle to be 65 for the left one and 67 for the right one, the car move along a fairly straight line.
+                            The calibration factor is about 65/67 = 0.97. Below is the demo video.
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/r334CX56QrA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+
+                        <div class="subheading mb-2">Open Loop</div>
+                        <p>
+                            I design a loop for the car to make it go straight for a while and then turn around. So the car will move forth and back in a short distance.
+                            The turning period should be related to the power of the battery and it is hard to decide.
+                            So in subsequent labs, we still need to use the sensors to determine the rotation time to ensure the correct rotation angle.
+                            <br>Below is the demo video.
+                        </p>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/SVNwbbZqSO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <pre><code>        #define fac 65.0/67.0;
+
+        void setup() {
+        //right
+        pinMode(A0, OUTPUT);
+        pinMode(A1, OUTPUT);
+        //left
+        pinMode(A2, OUTPUT);
+        pinMode(A3, OUTPUT);
+        }
+
+        void loop() {
+            analogWrite(A0, 67);
+            analogWrite(A1, 0);
+            analogWrite(A2, 0);
+            analogWrite(A3, 65);
+            delay(2000);
+            analogWrite(A0, 255);
+            analogWrite(A1, 0);
+            analogWrite(A2, 255*fac);
+            analogWrite(A3, 0);
+            delay(200);
+        } </code></pre>
                     </div>
 
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">Stunts</h3>
-                        <div class="subheading mb-2">The stunts that the car can do</div>
-                        <p>Push right/left until the car spin fast and then suddenly push up/down to make the car dance</p>
-                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/yeBUlb64Bms" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <h3 class="mb-1">5960 Tasks</h3>
+                        <div class="subheading mb-2">Frequency Analysis</div>
+                        <p>
+                            From the video above we know that the frequency of analog signals generated by the Artemis Board is about 182Hz when the duty cycle is lower than 255.
+                            And it also can go up to about 183Hz when I reverse the output signals, but it's still relatively stable.
+                            <br>
+                            Since we adjust the speed of motors by changing the duty cycle, theoretically, the shorter the cycle, the smoother the signals and the better the motors move.
+                            <br>
+                            But it takes time for Artemis Board to pull the signal high and low, which is called 'rising edge' and 'falling edge', and the period should be
+                            much larger than the time of 'rising edge' and 'falling edge' so that they can be ignored.
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab5/period.jpg" alt="period" title="period" /></div>
+                        <p>
+                            It can be seen from the waveform diagram of the oscilloscope that the rising and falling edges are almost a vertical line, so the period is
+                            large enough to ignore the time to pull signal high and low. But if we can make the period as small as possible (which means make the frequency as large as possible)
+                            while keeping it much larger than
+                            the time of 'rising edge' and 'falling edge', then we will be able to control the speed of the car more smoothly.
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab5/waveform.jpeg" alt="waveform" title="waveform" /></div>
+                        <div class="subheading mb-2">Ramp Up and Down</div>
+
                     </div>
 
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Truning Reliably</h3>
-                        <div class="subheading mb-2">How reliably does the robot turn around its own axis</div>
-                        <p>It is quite reliable.</p>
-                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/R7jUZ9oTQk8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                    </div>
+                    
 
         
 
