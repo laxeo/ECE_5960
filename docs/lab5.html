@@ -202,7 +202,95 @@
                             the time of 'rising edge' and 'falling edge', then we will be able to control the speed of the car more smoothly.
                         </p>
                         <div class="mb-2" align="center"><img width="85%"  src="images/lab5/waveform.jpeg" alt="waveform" title="waveform" /></div>
+                        
                         <div class="subheading mb-2">Ramp Up and Down</div>
+                        <p>
+                            I design a program to make the car speed up slowly to maximum for a while and then speed down quickly to avoid hitting the wall,
+                            and use notify function to receive the dc value sent by Artemis Board in the meantime.
+                        </p>
+                        <p>In loop function</p>
+                        <pre><code>        while (central.connected()) {
+
+            if(state==0 && dc+15<=255) dc += 15;
+            else if(dc-51>=0) dc -= 51;
+
+            if(dc==255){
+                state = 1;
+                delay(300);
+            }            
+            
+            straight();
+            get_val();}</code></pre>
+                        <p>Subfunctions:</p>
+                        <pre><code>        void straight(){
+            analogWrite(A0, dc);
+            analogWrite(A1, 0);
+            analogWrite(A2, 0);
+            analogWrite(A3, dc);
+            }
+
+        void get_val(){
+            tx_float_value = dc;
+            tx_characteristic_float.writeValue(tx_float_value);
+            }</code></pre>
+                        <p>Notify function:</p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab5/notify.png" alt="notify" title="notify" /></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/JxiQCmu0htE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                            To get the speed of the car:
+                            <br>
+                            Firstly, I hook up all the sensors on the car and connect them to the Artemis Board and activate one ToF at the front of the car to get the distance from the wall.
+                            <br>
+                            Secondly, I design a program which will make the car speed up slowly to maximum and keep running until receiving 'stop' command.
+                            When the Artemis Board is connected to the computer via bluetooth, the car will first wait for 10s and then start.
+                            <br>
+                            Thirdly, I activate a notify function in Jupyter Lab to receive data read by ToF so that I can then calculate the maximum speed of the car.
+                        </p>
+                        <pre><code>        int t_0 = millis();
+        // While central is connected
+        
+        while (central.connected()) {
+
+            if(millis()-t_0>10000 dc+15<=255) dc += 15;       
+            
+            straight();
+            get_tof();}</code></pre>
+                        <p>Subfunctions:
+                        </p>
+                        <pre><code>        void get_tof()
+        {
+            distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
+            while (!distanceSensor.checkForDataReady())
+            {
+            delay(1);
+            }
+            int distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
+            distanceSensor.clearInterrupt();
+            distanceSensor.stopRanging();
+        
+            Serial.println(distance);
+        
+            
+            tx_estring_value.clear();
+            tx_estring_value.append("[");
+            tx_estring_value.append((float)millis());
+            tx_estring_value.append(", ");
+            tx_estring_value.append(distance);
+            tx_estring_value.append("]");
+            tx_characteristic_string.writeValue(tx_estring_value.c_str());
+        }</code></pre>
+                        <p>
+                            Notify function:
+                        </p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab5/jupyterlab.png" alt="jupyterlab" title="jupyterlab" /></div>
+                        <div align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/ZHN1z9gilC4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                            Having collected the data from Jupyter Lab, I eliminated the invalid data and calculated the maximum running speed of the car from the valid data.
+                            <br>
+                            From the diagram below we can know that the maximum speed of the car is about 3.65m/s.
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab5/rawdata.png" alt="rawdata" title="rawdata" /></div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab5/validdata.png" alt="validdata" title="validdata" /></div>
 
                     </div>
 
