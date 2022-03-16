@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>ECE 5960 LAB 6</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version1)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Tongqing Zhang</span>
+                
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">MainPage</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab1.html">LAB 1</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab2.html">LAB 2</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab3.html">LAB 3</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab4.html">LAB 4</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab5.html">LAB 5</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#lab6">LAB 6</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab7.html">LAB 7</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab8.html">LAB 8</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab9.html">LAB 9</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab10.html">LAB 10</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab11.html">LAB 11</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab12.html">LAB 12</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab13.html">LAB 13</a></li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Page Content-->
+        <div class="container-fluid p-0">
+            <section class="resume-section" id="lab6">
+                <div class="resume-section-content">
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 6 - Closed-Loop Control (PID)</h2>
+                    <div class="flex-shrink-0"><span class="text-primary2" >Mar 10<sup>th</sup>, 2022</span></div>
+                    </div>
+                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Prelab / BLE</h3>
+                        <div class="subheading mb-2">BLE Setup</div>
+                        <p>
+                            Using 'ble_arduino.ino' as the framework, I can just modify the loop and add the case I need to complete the task of BLE control.
+                            <br>
+                            In this lab, I add two cases:
+                            <br>
+                            1. LAB_6: Execute PID control over a fixed amount of time (e.g. 5s), making the cart approach the wall quickly and stop 300mm away from the wall and
+                            storing the data into an array of fixed size (1000*3) in the meantime.
+                            <br>
+                            2. GET_DATA: Write the data into 'tx_characteristic_string' sequentially, so that the PC can get the data of the car running through notify function in Jupyter Lab.
+                        </p>
+                        <pre><code>        case GET_DATA:
+            
+            for(i = 0; i < last_i; i++){
+              tx_estring_value.clear();
+              tx_estring_value.append(" ");
+              tx_estring_value.append(data[i][0]); //time
+              tx_estring_value.append(" ");
+              tx_estring_value.append(data[i][1]); //distance
+              tx_estring_value.append(" ");
+              tx_estring_value.append(data[i][2]); //duty cycle
+              tx_characteristic_string.writeValue(tx_estring_value.c_str());
+            }
+            
+            break;</code></pre>
+
+                        <div class="subheading mb-2">Log and Send Data</div>
+                        <p>
+                            The car will store the data during operation in an array including time, distance from the wall, and duty cycle. After operation, I first activate a notify
+                            function in Jupyter Lab and than send the 'GET_DATA' command to the Artemis Board. Then I can get all the data needed.
+                        </p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab6/jupyter.png" alt="jupyter" title="jupyter" /></div>
+                    </div>
+                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Task A: Don’t Hit the Wall</h3>
+                        <p>
+                            First, I define the error to be 'distance - setpoint' and then implement the PID control.
+                        </p>
+                        <pre><code>        get_tof();
+        err = dis - set_point;</code></pre>
+
+                        <div class="subheading mb-2">PID Control</div>
+                        <p>For P, it's just a parameter proportional to error:</p>
+                        <pre><code>        P = K_p * err;
+        if(P > P_max) P = P_max;
+        else if(P < -P_max) P = -P_max;</code></pre>
+                        <p>
+                            For I, it's the integral of error over time.
+                            Since we can't subdivide time infinitely, I initialize integration to 0 and keep accumulating error*d_t to get an approximation.
+                            Then I make the integration back to 0 when the car pass the set_point so that it won't continue pushing the car away from the set_point.
+                            <br>
+                            I use it as a positive feedback mechanism to mitigate speed reduction when the car is getting closer to the set_point so that it can keep
+                            a relatively higher speed when crossing the set_point.
+                        </p>
+                        <pre><code>        if(err * pre_err < 0) integ = 0;
+        integ += err * d_t / 1000;
+        I = K_i * integ;
+        if(I > I_max) I = I_max;
+        else if(I < -I_max) I = -I_max;</code></pre>
+                        <p>
+                            For D, it's the differential of error which is the speed of the car in a broad sense.
+                            I use it as a negative feedback mechanism that only triggers when the car is moving away from the setpoint, providing an inverse factor to the PID.
+                        </p>
+                        <pre><code>        dif = (float)(err-pre_err)/d_t;
+        if(dif * err <= 0) D = 0;
+        else D = K_d * dif;</code></pre>
+
+                        <p>
+                            I set a cap for both P and I but not for D because when D is in effect, it reduces the speed, which also reduces D itself.
+                            <br>
+                            Finally, calculate the duty cycle using PID and deadband:
+                        </p>
+                        <pre><code>        raw = P + I + D;
+        
+        //Deadband
+        if(raw>0) org = 35;
+        else if(raw == 0) org = 0;
+        else org = -35;
+
+        //calculate speed
+        dc = org + raw;</code></pre>
+
+                        <div class="subheading mb-2">Parameter adjustment</div>
+
+                        <div class="subheading mb-2">Data analysis</div>
+                        <p></p>
+                    </div>
+
+                    
+
+        
+
+
+                    
+            </section>
+            <hr class="m-0" />
+           
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
