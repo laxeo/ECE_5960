@@ -58,7 +58,7 @@
                             <br>
                             In this lab, I add two cases:
                             <br>
-                            1. LAB_6: Execute PID control over a fixed amount of time (e.g. 5s), making the cart approach the wall quickly and stop 300mm away from the wall and
+                            1. LAB_6: Execute PID control over a fixed amount of time (15s), making the cart approach the wall quickly and stop 300mm away from the wall and
                             storing the data into an array of fixed size (1000*3) in the meantime.
                             <br>
                             2. GET_DATA: Write the data into 'tx_characteristic_string' sequentially, so that the PC can get the data of the car running through notify function in Jupyter Lab.
@@ -116,7 +116,7 @@
                             For D, it's the differential of error which is the speed of the car in a broad sense.
                             I use it as a negative feedback mechanism that only triggers when the car is moving away from the setpoint, providing an inverse factor to the PID.
                         </p>
-                        <pre><code>        dif = (float)(err-pre_err)/d_t;
+                        <pre><code>        dif = (float)(err-pre_err)/d_t*1000;
         if(dif * err <= 0) D = 0;
         else D = K_d * dif;</code></pre>
 
@@ -128,20 +128,82 @@
                         <pre><code>        raw = P + I + D;
         
         //Deadband
-        if(raw>0) org = 35;
-        else if(raw == 0) org = 0;
-        else org = -35;
+        if(err>0) org = deadband;
+        else if(err == 0) org = 0;
+        else org = -deadband;
 
         //calculate speed
         dc = org + raw;</code></pre>
 
                         <div class="subheading mb-2">Parameter adjustment</div>
-
+                            <p>
+                                Overall, P is the dominant factor, which decreases linearly with decreasing error.
+                                I is a factor that assists P, which can keep the car at a relatively higher speed when it is constantly approaching the set_point.
+                                D is a negative feedback factor for sudden braking after crossing the set_point.
+                                <br>
+                                So K_p should be relatively larger and K_i next. K_d can be large because the speed decreases rapidly so that D becomes small rapidly.
+                            </p>
+                            <p>
+                                K_p = 0.01; K_i = 0.001; K_d = 0.2; Deadband = 30;
+                            </p>
+                            <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/ET_XJWdonpM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                            <p>
+                                K_p = 0.02; K_i = 0.003; K_d = 0.2; Deadband = 30;
+                            </p>
+                            <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/TEZgKhOll58" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                            <p>
+                                Some other demo videos which support for reliability:
+                            </p>
+                            <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/KW5E5MT4a1Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                            <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/4XHy3C9rPZA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         <div class="subheading mb-2">Data analysis</div>
-                        <p></p>
+                        <p>K_p = 0.01; K_i = 0.001; K_d = 0.2; Deadband = 30;</p>
+                        <div class="mb-2" align="center">
+                            <img width="49%"  src="images/lab6/slow.png" alt="slow" title="slow" />
+                            <img width="49%"  src="images/lab6/slowdc.png" alt="slowdc" title="slowdc" />
+                        </div>
+                        <p>K_p = 0.02; K_i = 0.003; K_d = 0.2; Deadband = 30;</p>
+                        <div class="mb-2" align="center">
+                            <img width="49%"  src="images/lab6/fast.png" alt="fast" title="fast" />
+                            <img width="49%"  src="images/lab6/fastdc.png" alt="fastdc" title="fastdc" />
+                        </div>
+                        <p>
+                            We can see an instantaneously large reverse value in both of the graphs of duty cycle, which means the car wanted to make a sudden brake
+                            when crossing the set_point to avoid crashing into the wall. And this is the functionality of differential part of my design.
+                            <br>
+                            However, due to the limitation of ToF sampling frequency (~100ms once), it will crash into the wall when the car's passing speed is fast enough.
+                        </p>
                     </div>
 
-                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Discussions</h3>
+                        <div class="subheading mb-2">Frequency</div>
+                        <p>
+                            The frequency of one loop is limited by the sensor sampling rate of ToF whose period is about 100ms.
+                            <br>
+                            Therefore, when the speed of the car is relatively fast and the set_point is close to the wall, the car cannot brake in time after passing the set_point and will hit the wall.
+                        </p>
+
+                        <div class="subheading mb-2">Wind up of integrator</div>
+                        <p>I set a cap for the integrator and make it to be 0 when the car pass the set_point so that it would not affect the car catastrophically</p>
+                        
+                        <div class="subheading mb-2">Derivative LPF</div>
+                        <p>In my design, the derivative is used to brake the car effectively and it will decrease rapidly so I may not need an LPF for this Time</p>
+                        
+                        <div class="subheading mb-2">Derivative kick</div>
+                        <p>
+                            First, if the derivative is not initialized properly, it will start the car at an unpredictable high speed. So So I initialize it carefully before every boot.
+                            <br>
+                            Second, I just take use of the Derivative kick to brake the car efficiently.
+                        </p>
+                        <div class="subheading mb-2">Anything goes</div>
+                        <p>
+                            For the convenience of parameter adjustment, I set up a case to help change several commonly used values such as K_p, K_i, K_d, set_point, etc.
+                            This way I can constantly modify the run parameters by sending command to the Artemis Board via BLE control.
+                        </p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab6/setup.png" alt="setup" title="setup" /></div>
+                        <div class="subheading mb-2">Frequency</div>
+                    </div>
 
         
 
