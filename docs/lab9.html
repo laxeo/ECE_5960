@@ -51,115 +51,32 @@
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">Parameter Calculation</h3>
-                        <div class="subheading mb-2">Step Response</div>
+                        <h3 class="mb-1">PID Control</h3>
+                        <div class="subheading mb-2">Orientation control</div>
                         <p>
-                            First I set <span style="color:red;"><b>Duty Cycle</b></span> to be <span style="color:red;"><b>80</b></span>, and let the car run straight towards a wall and recorded the value of TOF.
-                            Then I use the data to calculate the speed of the car while also verifying the reliability via linear fitting.
+                            
                         </p>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab7/dis80.png" alt="dis80" title="dis80" /></div>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab7/speed80.png" alt="speed80" title="speed80" /></div>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab7/speedcal.png" alt="speedcal" title="speedcal" /></div>
-                        <p>
-                            As can be seen from the above figures:
-                            <br>
-                            Starting time: <span style="color:red;"><b>237.223ms</b></span>
-                            <br>
-                            Time to reach maximum speed: <span style="color:red;"><b>239.396ms</b></span>
-                            <br>
-                            Maximum speed: <span style="color:red;"><b>~1788.72mm/s</b></span>
-                        </p>
-
-                        <div class="subheading mb-2">Calculate 'd' and 'm' to fill up matrix A and B</div>
-                        <p>
-                            d = 80/1788.72 = <span style="color:red;"><b>0.04472</b></span>
-                            <br>
-                            For 'm', I first calculated the m value of each point, and then selected a point with a relatively stable value in the middle position for calculation:
-                            <br>
-                            m = -dt<sub>0.67</sub> / ln(1-0.67) = <span style="color:red;"><b>0.04972</b></span>
-                            <br>
-                            So the matrix A, B, C are showed below: (I change the C matrix from [-1 0] to [1 0] because the distance from the wall decreases as the car moves forward)
-                        </p>
-                        <div class="mb-2"><img width="50%"  src="images/lab7/matrix.png" alt="matrix" title="matrix" /></div>
+                        <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/mu_uvDvi4Gk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">Kalman Filter Setup</h3>
-                        <div class="subheading mb-2">Noise Matrix</div>
+                        <h3 class="mb-1">Read Out Distances</h3>
+                        <div class="subheading mb-2">Single point measurement</div>
                         <p>
-                            I set both σ<sub>1</sub> and σ<sub>2</sub> to be &radic;(10<sup>2</sup>&middot;1/d<sub>t</sub>), and σ<sub>3</sub> to be 20.
-                            <br>
-                            Then I have the Noise Matrix Σ<sub>μ</sub> and Σ<sub>z</sub> :
+                            
                         </p>
-                        <div class="mb-2"><img width="70%"  src="images/lab7/noise.png" alt="noise" title="noise" /></div>
 
-                        <div class="subheading mb-2">Kalman Filter Simulation</div>
+
+                        <div class="subheading mb-2">Combine data</div>
                         <p>
-                            I use the data in Lab6 (including Time, Duty Cycle, Distance) to simulate the Kalman Filter in Jupyter Lab under the conditions of no update and update respectively:
+
                         </p>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab7/noupdate.png" alt="noupdate" title="noupdate" /></div>
-                        <p>
-                            From the results above, it can be seen that the general trend of the simulation is consistent under the condition of only prediction.
-                            However, when the car adjusts its position back and forth near the set_point, a relatively large error occurs due to the rapid transition of duty cycle and the influence of ground friction, which leads the prediction curve to gradually deviate from the actual position.
-                        </p>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab7/updated.png" alt="updated" title="updated" /></div>
-                        <p>
-                           Having update, the simulation of Kalman Filter is highly coincident with the measured value by ToF, and the fit is perfect.
-                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab9/realmap.jpg" alt="realmap" title="realmap" /></div>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab9/mergedmap.png" alt="mergedmap" title="mergedmap" /></div>
                     </div>
 
-                    <div class="flex-grow-1">
-                        <h3 class="mb-1">Kalman Filter Implementation</h3>
-                        <div class="subheading mb-2">Noise Matrix</div>
-                        <p>
-                            I implemente the full version Kalman Filter (including Prediction and Update) on the Artemis Board:
-                        </p>
-                        <pre><code>//prediction:
-        sigma_1 = 10 * 10 / Delta_t;
-        sigma_2 = 10 * 10 / Delta_t;
-        sig_u = {sigma_1, 0,
-                    0, sigma_2};
-        A_d = {1, 1,
-                0, 1-kf_d/kf_m*Delta_t};
-        B_d = {0,
-                Delta_t/kf_m};
-        mu_p = A_d * mu + B_d * u;
-        sigma_p = A_d * sigma * ~A_d + sig_u;
-                
-        get_tof();
-
-//update:
-        KF_cur = C * sigma_p * ~C + sig_z;
-        KF_curr = 1/KF_cur(0,0);
-        KF_cur = {KF_curr};
-        KF_gain = sigma_p * ~C * KF_cur;
-        y = {(float)dis};
-        y_m = y - C * mu_p;
-        mu = mu_p + KF_gain * y_m;
-        sigma = (I_2 - KF_gain * C) * sigma_p;</code></pre>
-                        <p>
-                            I compare the two situations running the car while calculating error via TOF readings or using mu generated by the Kalman Filter under the same PID settings:
-                            <br>
-                            K_p = 0.02; K_i = 0.003; K_d = 0.1; Deadband = 35; Set_point = 300;
-                        </p>
-                        <div class="mb-2" align="center">
-                            <img width="49%"  src="images/lab7/TOF.png" alt="TOF" title="TOF" />
-                            <img width="49%"  src="images/lab7/TOFDC.png" alt="TOFDC" title="TOFDC" />
-                        </div>
-                        <div class="mb-2" align="center">
-                            <img width="49%"  src="images/lab7/mu.png" alt="mu" title="mu" />
-                            <img width="49%"  src="images/lab7/muDC.png" alt="muDC" title="muDC" />
-                        </div>
-                    </div>
-                    <p>
-                        From the graphs above, we can see that the two methods have almost the same trend and speed approaching the set_point.
-                        However, when the car arrives near the set_point, in the subsequent fine-tuning process, the control via ToF readings is obviously more stable.
-                        This is because the value calculated by Kalman Filter fluctuates a little greater than ToF readings, which makes the value of the differential term in the PID control relatively larger, resulting in stronger negative feedback, which makes the car move back and forth wildly around the set_point.
-                        I will consider lowering the factor K_d for Differential in the future or look for other better solutions.
-                    </p>
-
-                    
+                                  
             </section>
             <hr class="m-0" />
            
