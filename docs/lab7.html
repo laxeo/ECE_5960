@@ -151,18 +151,19 @@
                             <img width="49%"  src="images/lab7/mu.png" alt="mu" title="mu" />
                             <img width="49%"  src="images/lab7/muDC.png" alt="muDC" title="muDC" />
                         </div>
+                        <p>
+                            Below is the demo video of implementation of Kalman Filter:
+                        </p>
+                        <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/rFwe9NN0cXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                            From the graphs and video above, we can see that the two methods have almost the same trend and speed approaching the set_point.
+                            However, when the car arrives near the set_point, in the subsequent fine-tuning process, the control via ToF readings is obviously more stable (see LAB 6).
+                            <br>
+                            This is because the value calculated by Kalman Filter fluctuates a little greater than ToF readings, which makes the value of the differential term in the PID control relatively larger, resulting in stronger negative feedback, which makes the car move back and forth wildly around the set_point.
+                            I will consider lowering the factor K_d for Differential and value of simga_3 (sensor's setting error), making the system trust the sensor more to reduce calculation fluctuation in the future.
+                        </p>
                     </div>
-                    <p>
-                        Below is the demo video of implementation of Kalman Filter:
-                    </p>
-                    <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/rFwe9NN0cXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                    <p>
-                        From the graphs and video above, we can see that the two methods have almost the same trend and speed approaching the set_point.
-                        However, when the car arrives near the set_point, in the subsequent fine-tuning process, the control via ToF readings is obviously more stable.
-                        <br>
-                        This is because the value calculated by Kalman Filter fluctuates a little greater than ToF readings, which makes the value of the differential term in the PID control relatively larger, resulting in stronger negative feedback, which makes the car move back and forth wildly around the set_point.
-                        I will consider lowering the factor K_d for Differential and value of simga_3 (sensor's setting error), making the system trust the sensor more to reduce calculation fluctuation in the future.
-                    </p>
+                    
 
                     
             </section>
