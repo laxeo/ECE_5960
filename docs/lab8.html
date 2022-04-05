@@ -62,13 +62,16 @@
                             <img width="49%"  src="images/lab8/dc.png" alt="dc" title="dc" />
                         </div>
                         <p>
-                            As can be seen from the above figures:
+                            In this part, I first measured the distance from the required flip point to the wall which is <span style="color:red;"><b>800mm</b></span>, and set it to be the set_point of PID control.
                             <br>
-                            Starting time: <span style="color:red;"><b>237.223ms</b></span>
+                            Then I implemented the PID control only via ToF readings, which made the car rush towards the set_point and <span style="color:red;"><b>braked hard</b></span> after crossing the line (See LAB 6).
+                            Due to the high ground friction, the car flipped due to <span style="color:red;"><b>inertia</b></span>.
                             <br>
-                            Time to reach maximum speed: <span style="color:red;"><b>239.396ms</b></span>
+                            After the car flipped over, the ToF reading is incorrect due to the position of the ToF Sensor <span style="color:red;"><b>being too close to the ground</b></span> (Ground shadows and ambient lighting interfere with tof readings).
+                            As can be seen from the graphs above, the ToF readings were always <span style="color:red;"><b>less than the set_point (800mm)</b></span> after flipping, making the car get a <span style="color:red;"><b>negative duty cycle</b></span>
+                            which dramatically made the car moving back to the starting line.
                             <br>
-                            Maximum speed: <span style="color:red;"><b>~1788.72mm/s</b></span>
+                            If the TOF reading is correct, it should read a larger value than set_point, which make the car to get a positive duty cycle and keep moving forward until it hits the wall.
                         </p>
 
                         
@@ -79,16 +82,33 @@
                         <h3 class="mb-1">Open Loop</h3>
                         <div class="subheading mb-2">Repeatable Stunts: <span style="color:red;"><b>Standing Up</b></span></div>
                         <p>
-                            
+                            In this part, I designed a stunt called "Standing Up" which means the car stands up like a dog.
                         </p>
                         <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/klOcqiym0bc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         <p>
-                            Below are some demo videos for repeatability:
+                            I use readings of gyroscope in the IMU sensor to calculate the pitch angle of the car in real time to control its standing via PID (See LAB6).
+                            <br>
+                            I set the error in the original PID control as <span style="color:red;"><b>(pitch - set_point)</b></span> and make the set_point to be 0. So the car will always try to keep the pitch to be 0
+                            which is what it looks like when it initially starts up.
+                            <br>
+                            Then I helped the car to a vertical attitude and start the PID control. After letting go, the car will continuously adjust the positive and negative of duty cycle through PID control to keep the pitch angle unchanged, which makes it stand up.
+                            The absolute value of duty cycle is fixed at 100% so that the car can get the maximum power to adjust its posture.
+                            <br>
+                            Thanks to the <span style="color:red;"><b>high sampling frequency</b></span> of the IMU, the car can adjust its posture at a relatively high frequency and maintain the balance for a short period of time.
+                            <br>
+                            Due to the low friction on the ground, when the car falls to one side, it will not be able to restore its equilibrium position through motors. I believe it will perform much better on surfaces with high friction.
+                        </p>
+                        <p>
+                            Below are some more demo videos for repeatability:
                         </p>
                         <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/jvvQQItyJoo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/sGumhWUfKQM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/DgNZ1XmR4nI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         <div class="subheading mb-2">Bloopers</div>
+                        <p>
+                            I didn't limit the car's moving range at first, making it keep sprinting (trying to stand up) after falling to one side until it hit something.
+                            Eventually I found a wire soldered to the ToF's xshut was broken so I need to re-solder it later.
+                        </p>
                         <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/6IOa8aWd_kg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/FRgarXtXlq4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 
