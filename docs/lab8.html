@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>ECE 5960 LAB 7</title>
+        <title>ECE 5960 LAB 8</title>
         <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
         <!-- Font Awesome icons (free version1)-->
         <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
@@ -32,8 +32,8 @@
                     <li class="nav-item"><a class="nav-link" href="lab4.html">LAB 4</a></li>
                     <li class="nav-item"><a class="nav-link" href="lab5.html">LAB 5</a></li>
                     <li class="nav-item"><a class="nav-link" href="lab6.html">LAB 6</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#lab7">LAB 7</a></li>
-                    <li class="nav-item"><a class="nav-link" href="lab8.html">LAB 8</a></li>
+                    <li class="nav-item"><a class="nav-link" href="lab7.html">LAB 7</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#lab8">LAB 8</a></li>
                     <li class="nav-item"><a class="nav-link" href="lab9.html">LAB 9</a></li>
                     <li class="nav-item"><a class="nav-link" href="lab10.html">LAB 10</a></li>
                     <li class="nav-item"><a class="nav-link" href="lab11.html">LAB 11</a></li>
@@ -44,10 +44,10 @@
         </nav>
         <!-- Page Content-->
         <div class="container-fluid p-0">
-            <section class="resume-section" id="lab7">
+            <section class="resume-section" id="lab8">
                 <div class="resume-section-content">
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 7 - Kalman Filter</h2>
-                    <div class="flex-shrink-0"><span class="text-primary2" >Mar 17<sup>th</sup>, 2022</span></div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 8 - Stunts</h2>
+                    <div class="flex-shrink-0"><span class="text-primary2" >Mar 24<sup>th</sup>, 2022</span></div>
                     </div>
                     
                     <div class="flex-grow-1">
@@ -153,15 +153,10 @@
                         </div>
                     </div>
                     <p>
-                        Below is the demo video of implementation of Kalman Filter:
-                    </p>
-                    <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/rFwe9NN0cXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                    <p>
-                        From the graphs and video above, we can see that the two methods have almost the same trend and speed approaching the set_point.
+                        From the graphs above, we can see that the two methods have almost the same trend and speed approaching the set_point.
                         However, when the car arrives near the set_point, in the subsequent fine-tuning process, the control via ToF readings is obviously more stable.
-                        <br>
                         This is because the value calculated by Kalman Filter fluctuates a little greater than ToF readings, which makes the value of the differential term in the PID control relatively larger, resulting in stronger negative feedback, which makes the car move back and forth wildly around the set_point.
-                        I will consider lowering the factor K_d for Differential and value of simga_3 (sensor's setting error), making the system trust the sensor more to reduce calculation fluctuation in the future.
+                        I will consider lowering the factor K_d for Differential in the future or look for other better solutions.
                     </p>
 
                     
