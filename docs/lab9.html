@@ -54,7 +54,35 @@
                         <h3 class="mb-1">PID Control</h3>
                         <div class="subheading mb-2">Orientation control</div>
                         <p>
-                            
+                            In order to realize the control of the <span style="color:red;"><b>rotation angle</b></span> via PID control,
+                            I first get the angle of rotation of the car (yaw) by integrating gyroscope's angular velocity along the Z axis.
+                            Then used yaw to calculate the error in PID control.
+                        </p>
+                        <pre><code><span style="color:red;">//integration of angular velocity of the Z axis</span>
+        now = millis();
+        d_t = now - pre;
+        pre = now;
+        get_IMU();
+        yaw_g += myICM.gyrZ() * d_t / 1000; 
+
+<span style="color:red;">//calculate error using yaw_g</span>
+        err = yaw_g - intercept;
+
+<span style="color:red;">//get new gyroscope data</span>
+        void get_IMU(){
+            while(!myICM.dataReady()){
+              delay(1);
+            }
+            myICM.getAGMT();
+          }</code></pre>
+                        <p>
+                            In the settings of the PID control, I set the intercept in the loop to be <span style="color:red;"><b>10</b></span> degrees, which means
+                            each independent PID control will make the car rotate 10 degrees counterclockwise from its original orientation.
+                            (The starting direction is always towards the positive direction of the X axis)
+                            <br>
+                            Outside of a single PID loop I recorded the total rotation angle at the same time,
+                            and let the car continue to perform single independent PID control until the total rotation angle reached <span style="color:red;"><b>360</b></span> degrees.
+                            So I can get about <span style="color:red;"><b>36</b></span> data at each sampling point.
                         </p>
                         <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/mu_uvDvi4Gk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                         
@@ -64,16 +92,76 @@
                         <h3 class="mb-1">Read Out Distances</h3>
                         <div class="subheading mb-2">Single point measurement</div>
                         <p>
-                            
+                            Through the PID control of angle mentioned above, I obtained raw polar coordinate data at 5 standard points:
+                            <span style="color:red;"><b>(0,0), (0,3), (5,3), (5,-3), (-3,-2)</b></span>.
+                            Then I convert the polar data to Cartesian data and draw the graphs using the following formula:
                         </p>
-
+                        <h4 class="mb-1" align="center">
+                            x = r&middot;cos(&theta;)
+                            <br>
+                            y = r&middot;sin(&theta;)
+                        </h4>
+                        <div class="mb-2" align="center">
+                            <img width="49%"  src="images/lab9/data1.png" alt="data1" title="data1" />
+                        </div>
+                        <div class="mb-2" align="center">
+                            <img width="49%"  src="images/lab9/data2.png" alt="data2" title="data2" />
+                            <img width="49%"  src="images/lab9/data3.png" alt="data3" title="data3" />
+                        </div>
+                        <div class="mb-2" align="center">
+                            <img width="49%"  src="images/lab9/data4.png" alt="data4" title="data4" />
+                            <img width="49%"  src="images/lab9/data5.png" alt="data5" title="data5" />
+                        </div>
+                        
 
                         <div class="subheading mb-2">Combine data</div>
                         <p>
-
+                            For the above data, I first rotated the data at each point by <span style="color:red;"><b>0-10 degrees</b></span> to make it relatively aligned with the XY coordinate axis,
+                            and then translated the data correspondingly according to the coordinates of the sampling point.
+                            <br>
+                            For example, I did the following with the data taken at point <span style="color:red;"><b>(5,3)</b></span> (The length represented by each unit coordinate is 300mm)
+                            <br>
+                            The X-axis coordinate value of each data point <span style="color:red;"><b>+1500</b></span>,
+                            the Y-axis coordinate value of each data point <span style="color:red;"><b>+900</b></span>
                         </p>
-                        <div class="mb-2" align="center"><img width="85%"  src="images/lab9/realmap.jpg" alt="realmap" title="realmap" /></div>
+                        <p>
+                            Then I merged all the data into one graph below and used different colors and markers to distinguish their sampling points:
+                        </p>
                         <div class="mb-2" align="center"><img width="100%"  src="images/lab9/mergedmap.png" alt="mergedmap" title="mergedmap" /></div>
+                        <p>
+                            It can be seen from the outline of the graph that it perfectly matches the photo of real map:
+                        </p>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab9/merged.jpg" alt="outline" title="outline" /></div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab9/realmap.jpg" alt="realmap" title="realmap" /></div>
+                        
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Discussions</h3>
+                        <div class="subheading mb-2">Theoretical Error Analysis</div>
+                        <p>
+                            
+                        </p>
+
+                        <div class="subheading mb-2">Reliability</div>
+                        <p>
+                            I think it's more reliable to implemente PID control through orientation control. Before this lab, I tested the rotation of 90 degrees, 180 degrees and 360 degrees separately,
+                            whose error is only about 5 degrees which is relatively reliable.
+                            <br>
+                            If the PID control is implemented via angular velocity, the car is more likely to cause data skew or errors due to the relatively longer time (~100ms) taken to obtain ToF readings during rotation.
+                            <br>
+                            In addition, since the position of the IMU sensor is not exactly at the rotation axis of the car, this also produces tiny and negligible errors.
+                        </p>
+
+                        <div class="subheading mb-2">Actual Error Handling</div>
+                        <p>
+                            It can be found from <span style="color:red;"><b>Single Point Measurement</b></span> part that the raw data is more or less angularly offset relative to the Cartesian coordinate axis.
+                            This is because the offset of its initial position when placing the car at sampling points, and the ToF sensor may not be perfectly facing forward.
+                            <br>
+                            Therefore, before merging the data, it is necessary to rotate the data at each sampling point to a certain extent, so that they are relatively aligned.
+                        </p>
+
+                    
                     </div>
 
                                   
