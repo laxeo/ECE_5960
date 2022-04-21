@@ -46,21 +46,100 @@
         <div class="container-fluid p-0">
             <section class="resume-section" id="lab10">
                 <div class="resume-section-content">
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 10 - </h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 10 - Simulator</h2>
                     <div class="flex-shrink-0"><span class="text-primary2" >April 14<sup>th</sup>, 2022</span></div>
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">PID Control</h3>
-                        <div class="subheading mb-2">Orientation control</div>
+                        <h3 class="mb-1">Computer Setup</h3>
+                        <div class="subheading mb-2">Virtual environment configuration</div>
                         <p>
-                            
+                            Since the previously configured virtual environment is based on python3.9, we need to uninstall the current virtual environment first,
+                            and then reconfigure the virtual environment after updating python to version 3.10 in the physical machine.
+                            (Unable to upgrade python directly to 3.10 in a python3.9-based virtual environment)
                         </p>
-                        
+                        <p>
+                            Since I am using a macbook with arm64 architecture using M1 pro chip, there is a situation where <span style="color:red;"><b>pyqt5</b></span> cannot be installed during the configuration process.
+                            <br>
+                            So I changed to install <span style="color:red;"><b>pyqt6</b></span> and modified the corresponding dependencies in the <span style="color:red;"><b>_init_.py</b></span> file.
+                        </p>
                         
                     </div>
                     
-                    
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Simulation</h3>
+                        <div class="subheading mb-2">Functionality</div>
+                        <p>
+                            The simulator simulates a car equipped with an IMU sensor and a TOF sensor in a set map,
+                            which can move forward and backward and rotate around its axis.
+                            <br>
+                            In addition, the simulator provides a <span style="color:red;"><b>Plotter</b></span> to draw points and lines in an external window,
+                            and a <span style="color:red;"><b>Controller</b></span> to control the car using commands below:
+                        </p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab10/commands.png" alt="commands" title="commands" /></div>
+                        <p>
+                            So we can either manually control the car through the keyboard, or write a program to make the car run automatically while also plotting its trajectory at the same time.
+                        </p>
+                        
+                        <div class="subheading mb-2">Open Loop Control</div>
+                        <p>
+                            I designed a simple loop, in the loop, the car executes two commands in turn:
+                            <br>
+                            1. Move forward for <span style="color:red;"><b>1s</b></span> at a linear velocity of <span style="color:red;"><b>1 m/s</b></span>
+                            <br>
+                            2. Rotate left for <span style="color:red;"><b>1s</b></span> at an angular velocity of <span style="color:red;"><b>&#960;/2 rad/s</b></span> (Totally 90°)
+                            <br>
+                            In the meantime, plot the ground truth and odometry of the car.
+                        </p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab10/openloop.png" alt="openloop" title="openloop" /></div>
+                        <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/zbh0IW3PaLA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                            From the trajectory of ground truth (green line), we can see that the car is relatively accurately performing a square circular motion.
+                            Compared with the actual operation, it can be seen that the trajectory of ground truth is consistent with the actual motion of the car.
+                            <br>
+                            However, due to the excessive noise and inaccuracy, the trajectory of odometry calculated by the IMU data is very inconsistent with the actual situation.
+                        </p>
+                        <p>
+                            In the above loop, the duration of a velocity command is 1s. In fact, the duration of the command is related to the linear velocity of the car.
+                            Due to the limited size of the map, the faster the speed, the shorter the runtime.
+                        </p>
+                        <p>
+                            The car is not moving exactly on the exact same path, which means that it doesn't always execute the exact same shape.
+                            <br>
+                            This is because the commands executed by the car are discrete, which means tiny errors in operation will cause slight deviations due to reasons like rounding.
+                        </p>
+
+                        <div class="subheading mb-2">Closed Loop Control</div>
+                        <p>
+                            In this loop:
+                            <br>
+                            1. The car moves forward at a linear speed of <span style="color:red;"><b>1 m/s</b></span> when the distance from the obstacle is greater than <span style="color:red;"><b>0.3m</b></span>
+                            <br>
+                            2. When the car is less than <span style="color:red;"><b>0.3m</b></span> away from the obstacle, it rotates (left or right) at an angular velocity of <span style="color:red;"><b>&#960; rad/s</b></span> while continuously getting the ToF readings installed on the front of the car
+                            <br>
+                            3. During the rotation, when the reading of ToF is greater than <span style="color:red;"><b>0.5m</b></span> (meaning there is enough distance in front of the car to move),
+                            the car continues to go straight at a speed of <span style="color:red;"><b>1 m/s</b></span> 
+                        </p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab10/closedloop.png" alt="closedloop" title="closedloop" /></div>
+                        <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/ZlEkPRKzJzg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/RV1NYm5ce1g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <p>
+                            When encountering an obstacle, the rotation angle or time of the car depends on the ToF readings.
+                            Only when the ToF reading is large enough (meaning there is enough space in front of the car), the car can continue to move forward.
+                        </p>
+                        <p>    
+                            In order to prevent the car colliding with obstacles, the linear speed of the car is limited by the stopping distance. Faster speeds require larger stopping distances (meaning earlier stops)
+                        </p>
+                        <p>
+                            In theory, if the car can be regarded as a particle, it can approach the obstacle infinitely.
+                            However, considering the physical model of the car, it needs a certain amount of space in the process of turning,
+                            which limits how close it can get to obstacles. After actual testing, I think 0.3m is a relatively suitable distance.
+                        </p>
+                        <p>
+                            In the loop control I showed above, the car never got stuck between obstacles, which means my obstacle avoidance code always work.
+                        </p>
+
+                    </div>
 
                                   
             </section>
