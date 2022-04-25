@@ -92,7 +92,7 @@
     
     prob = p1 * p2 * p3</code></pre>
                         <p>
-                            I did the normalization for the angle in this part and set the <span style="color:red;"><b>x</b></span> of the Gaussian function to be <span style="color:red;"><b>(u_bar - u)</b></span> while setting <span style="color:red;"><b>mu</b></span> to <span style="color:red;"><b>0</b></span>.
+                            I did the normalization for the angle in this part and set the <span style="color:red;"><b>x</b></span> of the Gaussian function to be <span style="color:red;"><b>(u - u_bar)</b></span> while setting <span style="color:red;"><b>mu</b></span> to <span style="color:red;"><b>0</b></span>.
                             <br>
                             This is because even if I can normalize the angles in compute_control, the two rotation data may still cause the angle to exceed the threshold [-180,180) in the Gaussian function.
                             <br>
