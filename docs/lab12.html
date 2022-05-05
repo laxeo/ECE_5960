@@ -46,17 +46,238 @@
         <div class="container-fluid p-0">
             <section class="resume-section" id="lab12">
                 <div class="resume-section-content">
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 12 - Grid Localization (REAL)</h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-4"><h2 class="mb-2">LAB 12 - Grid Localization (Real)</h2>
                     <div class="flex-shrink-0"><span class="text-primary2" >April 28<sup>th</sup>, 2022</span></div>
                     </div>
                     
                     <div class="flex-grow-1">
-                        <h3 class="mb-1">PID Control</h3>
-                        <div class="subheading mb-2">Orientation control</div>
+                        <h3 class="mb-1">Objective</h3>
+                        <div class="subheading mb-2">Localization via update</div>
                         <p>
-                            
+                            The goal of this lab is implementing and performing localization on the actual robot car using only the update step of the Bayes filter.
                         </p>
                         
+                        
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Simulation</h3>
+                        <div class="subheading mb-2">Code test</div>
+                        <p>
+                            Before implementing the function on the actual robot car, we need to test the code by simulation in Jupyter Lab to make sure
+                            that the code is functionally free of problems and bugs:
+                        </p>
+                        <div class="mb-2" align="center"><img width="100%"  src="images/lab12/lab12sim.png" alt="lab12sim" title="lab12sim" /></div>
+                        <p>
+                            By comparing the trajectories of <span style="color:rgb(87, 229, 4);"><b>Ground Truth</b></span> and <span style="color:rgb(0, 162, 255);"><b>Belief</b></span>, it can be found that the function of the code is intact and can be used for actual robot.
+                        </p>
+
+                        
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Localization</h3>
+                        <div class="subheading mb-2">Robot control</div>
+                        <p>
+                            To implement the update step of Bayes filter, we need to Perform the observation loop behavior on the real robot car, where the robot does  
+                            a 360 degree turn in place while collecting equidistant (in the angular space) ToF sensor
+                            readings, with the first sensor reading taken at the robot's current heading. 
+                            <br>
+                            From Lab 11 we can know that the robot need to collect ToF sensor reading every 20 degree in one turn. So I just take use of the
+                            PID control implemented in Lab 9, and then change the rotation and data collection interval from 10° to 20° so that the robot collects
+                            18 ToF sensor readings corresponding to the rotation angle in one turn. (refer Lab 9 and Lab 11.)
+                        </p>
+                        <p>
+                            Below is the demo video while deploying the car on the set point with fixed initial heading
+                            (to the right of the map, that is, the positive direction of the x-axis):
+                        </p>
+                        <div class="mb-2" align="center"><iframe width="640" height="360" src="https://www.youtube.com/embed/hjwsuS2wVWI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+
+
+                        <div class="subheading mb-2">Data transmission and analysis</div>
+                        <p>
+                            In this part, I send commands (including <span style="color:red;"><b>performing the turn while collecting data</b></span> and 
+                                <span style="color:red;"><b>transfering the data to computer</b></span>) to the robot by BLE communication.
+                        </p>
+                        <p>
+                            For performing the turn while collecting the data, I just need to send the corresponding command
+                            (<span style="color:red;"><b>LAB</b></span>) and wait for it to complete (<span style="color:red;"><b>time.sleep()</b></span>)
+                            since the whole function is already written into the Artemis Board.
+                        </p>
+                        <pre><code>        <span style="color:red;">#Make the car to do a 360-degree rotation while storing the data needed</span>
+        ble.send_command(CMD.LAB, "")
+        time.sleep(40)</code></pre>
+                        <p>
+                            For getting the data from the car:
+                            <br>
+                            First, I use a notify function called <span style="color:red;"><b>update</b></span>
+                            to monitor whether the corresponding value (<span style="color:red;"><b>RX_STRING</b></span>) on the Artemis Board has changed.
+                            The function is able to detect and record the value whenever it changes;
+                            <br>
+                            Second, I send a command (<span style="color:red;"><b>GET_DATA</b></span>) to the robot to make the robot sequentially
+                            write the data collected into the corresponding value (<span style="color:red;"><b>RX_STRING</b></span>),
+                            which can be notified by the computer and recorded into an empty array <span style="color:red;"><b>raw</b></span>.
+                            <br>
+                            Finally, I separate the data in raw and store them in corresponding arrays
+                            (<span style="color:red;"><b>sensor_ranges</b></span> and <span style="color:red;"><b>sensor_bearings</b></span>) respectively,
+                            which will be used to calculate the <span style="color:rgb(0, 162, 255);"><b>belief</b></span> of the robot.
+                        </p>
+                        <pre><code>        <span style="color:red;">#Transfer the data to computer and store it properly</span>
+        ble.start_notify(ble.uuid['RX_STRING'], self.update)
+        time.sleep(2)
+        ble.send_command(CMD.GET_DATA, "")
+        time.sleep(2)
+        ble.stop_notify(ble.uuid['RX_STRING'])
+        
+        <span style="color:red;">#Seperate the data</span>
+        for i in range(36) :
+            if(i%2==0):
+                sensor_bearings.append(self.raw[i])
+            else:
+                sensor_ranges.append(self.raw[i]/1000)
+        
+        <span style="color:red;">#Transpose matrix</span>
+        sensor_ranges = np.array(sensor_ranges)[np.newaxis].T
+        sensor_bearings = np.array(sensor_bearings)[np.newaxis].T
+
+        <span style="color:red;">#update function for notify</span>
+        <span style="color:rgb(0, 162, 255);"><b>def update(self,raw,b):</b></span>
+        <span style="color:red;">#Store the data into raw</span>
+            temp = ble.bytearray_to_float(b)
+            self.raw.append(temp)</code></pre>
+
+                        
+                        
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Result</h3>
+                        <p>
+                            The following are the localization results of the robot at the required four points (the position where the x-y axis crosses is (0,0)):
+                            <br>
+                            For each point I tested twice.
+                        </p>
+
+                        <div class="subheading mb-2">Real Point (-3,-2)</div>
+                        <p>
+                            Result 1: <span style="color:red;"><b>(-3,-1)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(-3,-2)_v1_res.png" alt="(-3,-2)_v1_res" title="(-3,-2)_v1_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(-3,-2)_v1_polar.png" alt="(-3,-2)_v1_polar" title="(-3,-2)_v1_polar" />
+                            <img width="49%"  src="images/lab12/(-3,-2)_v1_1.png" alt="(-3,-2)_v1_1" title="(-3,-2)_v1_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(-3,-2)_v1_2.png" alt="(-3,-2)_v1_2" title="(-3,-2)_v1_2" /></div>
+                        
+                        <p>
+                            Result 2: <span style="color:red;"><b>(-3,-2)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(-3,-2)_v2_res.png" alt="(-3,-2)_v2_res" title="(-3,-2)_v2_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(-3,-2)_v2_polar.png" alt="(-3,-2)_v2_polar" title="(-3,-2)_v2_polar" />
+                            <img width="49%"  src="images/lab12/(-3,-2)_v2_1.png" alt="(-3,-2)_v2_1" title="(-3,-2)_v2_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(-3,-2)_v2_2.png" alt="(-3,-2)_v2_2" title="(-3,-2)_v2_2" /></div>
+
+                        <div class="subheading mb-2">Real Point (0,3)</div>
+                        <p>
+                            Result 1: <span style="color:red;"><b>(-1,3)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(0,3)_v1_res.png" alt="(0,3)_v1_res" title="(0,3)_v1_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(0,3)_v1_polar.png" alt="(0,3)_v1_polar" title="(0,3)_v1_polar" />
+                            <img width="49%"  src="images/lab12/(0,3)_v1_1.png" alt="(0,3)_v1_1" title="(0,3)_v1_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(0,3)_v1_2.png" alt="(0,3)_v1_2" title="(0,3)_v1_2" /></div>
+
+                        <p>
+                            Result 2: <span style="color:red;"><b>(0,3)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(0,3)_v2_res.png" alt="(0,3)_v2_res" title="(0,3)_v2_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(0,3)_v2_polar.png" alt="(0,3)_v2_polar" title="(0,3)_v2_polar" />
+                            <img width="49%"  src="images/lab12/(0,3)_v2_1.png" alt="(0,3)_v2_1" title="(0,3)_v2_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(0,3)_v2_2.png" alt="(0,3)_v2_2" title="(0,3)_v2_2" /></div>
+
+
+
+                        <div class="subheading mb-2">Real Point (5,3)</div>
+                        <p>
+                            Result 1: <span style="color:red;"><b>(5,2)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(5,3)_v1_res.png" alt="(5,3)_v1_res" title="(5,3)_v1_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(5,3)_v1_polar.png" alt="(5,3)_v1_polar" title="(5,3)_v1_polar" />
+                            <img width="49%"  src="images/lab12/(5,3)_v1_1.png" alt="(5,3)_v1_1" title="(5,3)_v1_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(5,3)_v1_2.png" alt="(5,3)_v1_2" title="(5,3)_v1_2" /></div>
+
+                        <p>
+                            Result 2: <span style="color:red;"><b>(5,3)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(5,3)_v2_res.png" alt="(5,3)_v2_res" title="(5,3)_v2_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(5,3)_v2_polar.png" alt="(5,3)_v2_polar" title="(5,3)_v2_polar" />
+                            <img width="49%"  src="images/lab12/(5,3)_v2_1.png" alt="(5,3)_v2_1" title="(5,3)_v2_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(5,3)_v2_2.png" alt="(5,3)_v2_2" title="(5,3)_v2_2" /></div>
+
+                        <div class="subheading mb-2">Real Point (5,-3)</div>
+                        <p>
+                            Result 1: <span style="color:red;"><b>(5,-3)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(5,-3)_v1_res.png" alt="(5,-3)_v1_res" title="(5,-3)_v1_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(5,-3)_v1_polar.png" alt="(5,-3)_v1_polar" title="(5,-3)_v1_polar" />
+                            <img width="49%"  src="images/lab12/(5,-3)_v1_1.png" alt="(5,-3)_v1_1" title="(5,-3)_v1_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(5,-3)_v1_2.png" alt="(5,-3)_v1_2" title="(5,-3)_v1_2" /></div>
+
+                        <p>
+                            Result 2: <span style="color:red;"><b>(5,-3)</b></span>
+                        </p>
+                        <div  align="center"><img width="85%"  src="images/lab12/(5,-3)_v2_res.png" alt="(5,-3)_v2_res" title="(5,-3)_v2_res" /></div>
+                        <div  align="center">
+                            <img width="49%"  src="images/lab12/(5,-3)_v2_polar.png" alt="(5,-3)_v2_polar" title="(5,-3)_v2_polar" />
+                            <img width="49%"  src="images/lab12/(5,-3)_v2_1.png" alt="(5,-3)_v2_1" title="(5,-3)_v2_1" />
+                        </div>
+                        <div class="mb-2" align="center"><img width="85%"  src="images/lab12/(5,-3)_v2_2.png" alt="(5,-3)_v2_2" title="(5,-3)_v2_2" /></div>
+                        
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">Discussion</h3>
+                        <div class="subheading mb-2">Result deviation</div>
+                        <p>
+                            From the result above, we can find that most of the localized poses are very close to (only one grid error)
+                            or just right at the Ground Truth.
+                            <br>
+                            According to the error analysis in LAB 9, I think the main reason for the deviation is
+                            <span style="color:red;"><b>the deviation of the actual rotation center from the theoretical center</b></span>,
+                            which can be seen in the demo video.
+                            <br>
+                            Due to the <span style="color:red;"><b>uneven ground friction</b></span>,
+                            the <span style="color:red;"><b>natural inclination of the ground</b></span>,
+                            and the <span style="color:red;"><b>inconsistency of the tire rotation speed</b></span>, etc.,
+                            it may cause the rotation center of the car to gradually deviate from the original one during the rotation process,
+                            and eventually cause the position of the car to deviate from the original placement position after a 360 degree turn.
+                        </p>
+                        <p>
+                            If the position of localization deviates greatly from Ground Truth during the experiment,
+                            the reason is mostly because the ToF reading has a large error (<span style="color:red;">out of range</span> or just an <span style="color:red;">occasional reading error</span>),
+                            or you forgot to convert the ToF readings(<span style="color:red;"><b>mm</b></span>)
+                            into the unit read by the function(<span style="color:red;"><b>m</b></span>).
+                        </p>
+                        <p>
+                            In addition, I found that the localization at point <span style="color:red;"><b>(5,3)</b></span> is relatively more accurate.
+                            <br>
+                            From the polar coordinate results of the two experiments, it can be found that the data of the two experiments are highly consistent,
+                            which indicates that the ToF readings of the two experiments are very stable and consistent.
+                            <br>
+                            This may be because the position of point <span style="color:red;"><b>(5,3)</b></span> faces the wall very close on two sides (right and below),
+                            and the distances of the obstacles on the left and the upper left are relatively closer, which reduces the probability of a large ToF error.
+                        </p>
                         
                     </div>
                     
