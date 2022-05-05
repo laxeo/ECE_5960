@@ -253,7 +253,7 @@
                             From the result above, we can find that most of the localized poses are very close to (only one grid error)
                             or just right at the Ground Truth.
                             <br>
-                            According to the error analysis in LAB 9, I think the main reason for the deviation is
+                            According to the error analysis in LAB 9, I think one of the reasons for the deviation is
                             <span style="color:red;"><b>the deviation of the actual rotation center from the theoretical center</b></span>,
                             which can be seen in the demo video.
                             <br>
@@ -262,6 +262,14 @@
                             and the <span style="color:red;"><b>inconsistency of the tire rotation speed</b></span>, etc.,
                             it may cause the rotation center of the car to gradually deviate from the original one during the rotation process,
                             and eventually cause the position of the car to deviate from the original placement position after a 360 degree turn.
+                            <br>
+                            On the other hand, topographical factor may more or less cause the deviation for the three points.
+                            At these points, the car need to detect some relatively difficult points
+                            (<span style="color:red;"><b>obstacles's edge</b></span> or <span style="color:red;"><b>distant wall</b></span>),
+                            which can easily lead to larger error.
+                            <br>
+                            All in all, <span style="color:red;"><b>edges that are far away</b></span> and
+                                <span style="color:red;"><b>edges whose distance varies greatly with angle</b></span> are prone to larger errors.
                         </p>
                         <p>
                             If the position of localization deviates greatly from Ground Truth during the experiment,
